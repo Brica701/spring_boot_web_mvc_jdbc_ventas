@@ -1,10 +1,66 @@
-<!DOCTYPE html>
-<html lang="en">
+<!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-4.dtd">
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>Detalles Comercial</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
 </head>
 <body>
+<div class="container mt-5">
+    <h1 class="text-center mb-4">Detalles del Comercial</h1>
 
+    <div class="form-group">
+        <label>Nombre</label>
+        <input type="text" th:value="${comercial.nombre}" class="form-control" readonly="readonly">
+    </div>
+
+    <div class="form-group">
+        <label>Primer apellido</label>
+        <input type="text" th:value="${comercial.apellido1}" class="form-control" readonly="readonly">
+    </div>
+
+    <div class="form-group">
+        <label>Segundo apellido</label>
+        <input type="text" th:value="${comercial.apellido2}" class="form-control" readonly="readonly">
+    </div>
+
+    <div class="form-group">
+        <label>Comisión</label>
+        <input type="text" th:value="${comercial.comision}" class="form-control" readonly="readonly">
+    </div>
+
+    <div class="form-group">
+        <h4>Pedidos del Comercial</h4>
+        <div th:each="pedido : ${listaPedidos}" class="mb-3">
+            <div class="form-group">
+                <label>ID Pedido</label>
+                <input type="text" th:value="${pedido.id}" class="form-control" readonly="readonly">
+            </div>
+
+            <div class="form-group">
+                <label>Total</label>
+                <input type="text" th:value="${pedido.total}" class="form-control" readonly="readonly">
+            </div>
+
+            <div class="form-group">
+                <label>Fecha</label>
+                <input type="text" th:value="${pedido.fecha}" class="form-control" readonly="readonly">
+            </div>
+
+            <div class="form-group">
+                <label>Cliente</label>
+                <input type="text" th:value="${cliente.nombre}" class="form-control" readonly="readonly">
+            </div>
+
+            <br>
+        </div>
+    </div>
+
+    <div class="form-group text-center">
+        <form action="/comerciales">
+            <button type="submit" class="btn btn-secondary">Volver</button>
+        </form>
+    </div>
+</div>
 </body>
 </html>
