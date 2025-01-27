@@ -7,4 +7,6 @@ import java.lang.annotation.Target;
 @Mapper(componentModel = "spring")
 public interface ClienteMapper {
     public ClienteDTO clienteAClienteDTO(Cliente cliente, Integer numeroTotalPedidos);
+    public Cliente clienteDTOACliente(ClienteDTO clienteDTO);
+
 }
