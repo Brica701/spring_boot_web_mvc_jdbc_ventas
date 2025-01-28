@@ -1,9 +1,10 @@
 package org.iesvdm.dao;
 
-import ch.qos.logback.classic.Logger;
 import lombok.extern.slf4j.Slf4j;
+import org.iesvdm.dto.PedidoDTO;
 import org.iesvdm.modelo.Pedido;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
@@ -14,6 +15,7 @@ import java.util.List;
 import java.util.Optional;
 import java.sql.Date;
 
+@Slf4j
 @Repository
 public class PedidoDAOImpl implements PedidoDAO {
 
@@ -109,11 +111,57 @@ public class PedidoDAOImpl implements PedidoDAO {
     }
 
     @Override
-    public void delete(long id) {
+    public void delete(int id) {
 
         int rows = jdbcTemplate.update("DELETE FROM pedido WHERE id = ?", id);
 
         log.info("Delete de Pedido con {} registros eliminados.", rows);
+    }
+
+    @Override
+    public List<Pedido> filterByClienteId(int id) {
+
+        List<Pedido> lista = jdbcTemplate.query(
+                "SELECT * FROM pedido WHERE id_cliente = ?",
+                (rs, rowNum) -> new Pedido(
+                        rs.getInt("id"),
+                        rs.getDouble("total"),
+                        rs.getDate("fecha"),
+                        rs.getInt("id_cliente"),
+                        rs.getInt("id_comercial")
+                ), id
+
+        );
+
+        return lista;
+    }
+
+    @Override
+    public List<Pedido> filterByComercialId(int id) {
+
+        List<Pedido> lista = jdbcTemplate.query(
+                "SELECT * FROM pedido WHERE id_comercial = ?",
+
+                (rs, rowNum) -> new Pedido(
+                        rs.getInt("id"),
+                        rs.getDouble("total"),
+                        rs.getDate("fecha"),
+                        rs.getInt("id_cliente"),
+                        rs.getInt("id_comercial")
+                ), id
+
+        );
+
+        return lista;
+    }
+
+    @Override
+    public List<PedidoDTO> filterByComercialIdDTO(int id) {
+
+        String sql = "SELECT * FROM pedido WHERE id_comercial = ?";
+
+        return jdbcTemplate.query(sql, new BeanPropertyRowMapper<>(PedidoDTO.class), id);
+
     }
 
 }
