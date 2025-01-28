@@ -1,7 +1,9 @@
 package org.iesvdm.controlador;
 
 import java.util.List;
+import java.util.Optional;
 
+import org.iesvdm.dto.ClienteDTO;
 import org.iesvdm.modelo.Cliente;
 import org.iesvdm.service.ClienteService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -53,7 +55,7 @@ public class ClienteController {
 	@GetMapping("/clientes/detalles/{id}")
 	public String infoCliente(Model model, @PathVariable int id) {
 
-		Optional<ClienteDTO>clienteDTO = clienteService.obtenerDatosCliente( id);
+		Optional<ClienteDTO> clienteDTO = clienteService.obtenerDatosCliente( id);
 		if (clienteDTO.isPresent()){
 			model.addAttribute("clienteDetalle" , clienteDTO.get());
 		}else {

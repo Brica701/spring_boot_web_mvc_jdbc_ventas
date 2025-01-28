@@ -5,6 +5,7 @@ import java.util.Optional;
 
 import org.iesvdm.dao.ClienteDAO;
 import org.iesvdm.dao.PedidoDAO;
+import org.iesvdm.dto.ClienteDTO;
 import org.iesvdm.modelo.Cliente;
 import org.iesvdm.modelo.Pedido;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -53,5 +54,6 @@ public class ClienteService {
         clienteDAO.delete(id);
 
     }
+
 
 }
