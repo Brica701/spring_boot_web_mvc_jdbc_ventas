@@ -1,8 +1,11 @@
 package org.iesvdm.service;
 
 import org.iesvdm.dao.ComercialDAO;
+import org.iesvdm.dto.ClienteDTO;
+import org.iesvdm.dto.ComercialDTO;
 import org.iesvdm.modelo.Cliente;
 import org.iesvdm.modelo.Comercial;
+import org.iesvdm.modelo.Pedido;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -47,6 +50,18 @@ public class ComercialService {
     public void deleteComercial(int id) {
 
         comercialDAO.delete(id);
+
+    }
+
+    public ComercialDTO totalMediaPedidos(int id) {
+
+        return comercialDAO.totalMediaPedidos(id);
+
+    }
+
+    public List<ClienteDTO>listaCuantia(int id) {
+
+        return comercialDAO.listaCuantia(id);
 
     }
 

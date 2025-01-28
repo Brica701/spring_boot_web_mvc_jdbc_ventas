@@ -1,6 +1,14 @@
 package org.iesvdm.controlador;
 
+import org.iesvdm.dao.PedidoDAO;
+import org.iesvdm.dao.PedidoDAOImpl;
+import org.iesvdm.dto.ClienteDTO;
+import org.iesvdm.dto.ComercialDTO;
+import org.iesvdm.dto.PedidoDTO;
+import org.iesvdm.modelo.Cliente;
 import org.iesvdm.modelo.Comercial;
+import org.iesvdm.modelo.Pedido;
+import org.iesvdm.service.ClienteService;
 import org.iesvdm.service.ComercialService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -11,83 +19,115 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.servlet.view.RedirectView;
 
+import java.util.Comparator;
 import java.util.List;
-
 
 @Controller
 public class ComercialController {
 
     @Autowired
-    ComercialService comercialService;
+    private ComercialService comercialService;
 
-    @GetMapping("/comercial")
+    @Autowired
+    private ClienteService clienteService;
+
+    @Autowired
+    private PedidoDAOImpl pedidoDAO;
+
+    // LISTAR
+    @GetMapping("/comerciales")
     public String listar(Model model) {
 
-        List<Comercial> listaComercial = comercialService.listAll();
-        model.addAttribute("listaComercial", listaComercial);
+        List<Comercial> listaComerciales =  comercialService.listAll();
+        model.addAttribute("listaComerciales", listaComerciales);
 
-        return "/comercial/comerciales";
+        return "comerciales";
+
     }
 
-    @GetMapping("/comercial/crear")
-    public String crear(Model model) {
+    //CREAR
+    @GetMapping("/comerciales/crear")
+    public String crear (Model model) {
 
         Comercial comercial = new Comercial();
-
         model.addAttribute("comercial", comercial);
 
-        return "/comercial/crear-comercial";
+        return "crear-comerciales";
     }
 
-
-    @PostMapping("/comercial/crear")
+    @PostMapping("/comerciales/crear")
     public RedirectView submitCrear(@ModelAttribute("comercial") Comercial comercial) {
 
         comercialService.newComercial(comercial);
 
-        return new RedirectView("/comercial");
+        return new RedirectView("/comerciales") ;
 
     }
 
+    // DETALLE
+    @GetMapping("/comerciales/{id}")
+    public String detalle(Model model, @PathVariable Integer id) {
 
-    @GetMapping("/comercial/editar/{id}")
-    public String editar(Model model, @PathVariable Integer id) {
-
-        Comercial comercial = comercialService.findById(id);
-
+        Comercial comercial = comercialService.one(id);
         model.addAttribute("comercial", comercial);
 
-        return "/comercial/editar-comercial";
+        List<Pedido> listaPedidos = pedidoDAO.filterByComercialId(id);
+        model.addAttribute("listaPedidos", listaPedidos);
+
+        Cliente cliente = clienteService.one(id);
+        model.addAttribute("cliente", cliente);
+
+        ComercialDTO comercialDTO = comercialService.totalMediaPedidos(id);
+        model.addAttribute("comercialDTO", comercialDTO);
+
+        List <PedidoDTO> listaPedidosDTO = pedidoDAO.filterByComercialIdDTO(id);
+        model.addAttribute("listaPedidosDTO", listaPedidosDTO);
+
+        PedidoDTO maxPedido = listaPedidosDTO.stream()
+                .max(Comparator.comparingDouble(PedidoDTO::getTotal))
+                .orElse(null);
+        model.addAttribute("maxPedido", maxPedido);
+
+        PedidoDTO minPedido = listaPedidosDTO.stream()
+                .min(Comparator.comparingDouble(PedidoDTO::getTotal))
+                .orElse(null);
+        model.addAttribute("minPedido", minPedido);
+
+        List<ClienteDTO> listaClienteDTO = comercialService.listaCuantia(id);
+        model.addAttribute("listaClienteDTO", listaClienteDTO);
+
+        return "detalle-comerciales";
+
     }
 
-    @PostMapping("/comercial/editar/{id}")
+    // EDITAR
+    @GetMapping("/comerciales/editar/{id}")
+    public String editar (Model model , @PathVariable Integer id) {
+
+        Comercial comercial = comercialService.one(id);
+        model.addAttribute("comercial", comercial);
+
+        return "editar-comerciales";
+
+    }
+
+    @PostMapping("/comerciales/editar/{id}")
     public RedirectView editarSubmit(@ModelAttribute("comercial") Comercial comercial) {
 
         comercialService.replaceComercial(comercial);
 
-        return new RedirectView("/comercial");
+        return new RedirectView("/comerciales");
 
     }
 
-
-    @PostMapping("/comercial/borrar/{id}")
-    public RedirectView submitBorrar(@PathVariable Integer id) {
+    // BORRAR
+    @PostMapping("/comerciales/borrar/{id}")
+    public RedirectView submitBorrar ( @PathVariable Integer id) {
 
         comercialService.deleteComercial(id);
 
-        return new RedirectView("/comercial");
-    }
+        return new RedirectView("/comerciales") ;
 
-    @GetMapping("/comercial/detalles/{id}")
-    public String infoComercial (Model model , @PathVariable int id){
-
-        Comercial comercial = comercialService.findById(id);
-        model.addAttribute("comercial", comercial);
-
-        int cantidad = comercialService.getCantidadPedidos(id);
-        model.addAttribute("cantidad" , cantidad);
-
-        return "/comercial/detalle-comercial";
     }
 
 }
