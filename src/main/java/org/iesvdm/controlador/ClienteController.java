@@ -8,6 +8,7 @@ import org.iesvdm.modelo.Cliente;
 import org.iesvdm.modelo.Pedido;
 import org.iesvdm.service.ClienteService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -49,21 +50,13 @@ public class ClienteController {
 	}
 
 	@PostMapping("/clientes/crear")
-	public RedirectView submitCrear(@Valid @ModelAttribute("cliente")Cliente cliente, BindingResult bindingResult, Model model) {
+	public RedirectView submitCrear(@Valid @ModelAttribute("cliente")Cliente cliente) {
 
-		if (bindingResult.hasErrors()){
-			model.addAttribute("cliente",  cliente);
-			List<Cliente> listaClientes =  this.clienteService.listAll();
-			model.addAttribute("clientes", listaClientes);
+		clienteService.newCliente(cliente);
 
-			return "crear-cliente";
-		}
-		//clienteService.newCliente(cliente);
-		 Cliente cliente1 =
-		//return new RedirectView("/clientes") ;
+		return new RedirectView("/clientes") ;
 
-
-    }
+	}
 
 	@GetMapping("/clientes/{id}")
 	public String detalle(Model model, @PathVariable Integer id) {
