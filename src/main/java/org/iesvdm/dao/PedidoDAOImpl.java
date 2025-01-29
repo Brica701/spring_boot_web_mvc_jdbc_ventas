@@ -1,5 +1,6 @@
 package org.iesvdm.dao;
 
+import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.iesvdm.dto.PedidoDTO;
 import org.iesvdm.modelo.Pedido;
@@ -15,6 +16,7 @@ import java.util.List;
 import java.util.Optional;
 import java.sql.Date;
 
+@NoArgsConstructor
 @Slf4j
 @Repository
 public class PedidoDAOImpl implements PedidoDAO {
