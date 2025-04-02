@@ -18,5 +18,7 @@ public class PedidoService {
         return pedidoDAO.getAll();
 
     }
-
+    public List<Pedido> findPedidosByComercialId(int comercialId) {
+        return pedidoDAO.findByComercialId(comercialId);
+    }
 }

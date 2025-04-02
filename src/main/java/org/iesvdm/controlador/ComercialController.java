@@ -1,7 +1,10 @@
 package org.iesvdm.controlador;
 
+import org.iesvdm.dto.EstadisticasComercialDTO;
 import org.iesvdm.modelo.Comercial;
+import org.iesvdm.modelo.Pedido;
 import org.iesvdm.service.ComercialService;
+import org.iesvdm.service.PedidoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -19,6 +22,10 @@ public class ComercialController {
     @Autowired
     private ComercialService comercialService;
 
+    @Autowired
+    private PedidoService pedidoService;
+
+    // Listar todos los comerciales
     @GetMapping("/comercial")
     public String listar(Model model) {
         List<Comercial> listaComercial = comercialService.listAll();
@@ -26,6 +33,7 @@ public class ComercialController {
         return "/comercial/comerciales";
     }
 
+    // Crear nuevo comercial
     @GetMapping("/comercial/crear")
     public String crear(Model model) {
         model.addAttribute("comercial", new Comercial());
@@ -38,9 +46,10 @@ public class ComercialController {
         return new RedirectView("/comercial");
     }
 
+    // Editar un comercial existente
     @GetMapping("/comercial/editar/{id}")
     public String editar(Model model, @PathVariable Integer id) {
-        Comercial comercial = comercialService.one(id); // CORREGIDO
+        Comercial comercial = comercialService.one(id);
         model.addAttribute("comercial", comercial);
         return "/comercial/editar-comercial";
     }
@@ -51,17 +60,35 @@ public class ComercialController {
         return new RedirectView("/comercial");
     }
 
+    // Eliminar un comercial
     @PostMapping("/comercial/borrar/{id}")
     public RedirectView submitBorrar(@PathVariable Integer id) {
         comercialService.deleteComercial(id);
         return new RedirectView("/comercial");
     }
 
+    // Ver detalles de un comercial y sus pedidos
     @GetMapping("/comercial/detalles/{id}")
     public String infoComercial(Model model, @PathVariable int id) {
-        Comercial comercial = comercialService.one(id); // CORREGIDO
+        // Obtener comercial por ID
+        Comercial comercial = comercialService.one(id);
         model.addAttribute("comercial", comercial);
 
+        // Obtener los pedidos del comercial
+        List<Pedido> pedidos = pedidoService.findPedidosByComercialId(id);
+
+        // Calcular el total de pedidos
+        float totalPedidos = pedidos.stream().mapToFloat(Pedido::getTotal).sum();
+
+        // Calcular la media de los pedidos
+        float mediaPedidos = pedidos.isEmpty() ? 0 : totalPedidos / pedidos.size();
+
+        // Crear el DTO de estadísticas
+        EstadisticasComercialDTO estadisticas = new EstadisticasComercialDTO(totalPedidos, mediaPedidos);
+
+        // Pasar las estadísticas y pedidos al modelo
+        model.addAttribute("estadisticas", estadisticas);
+        model.addAttribute("pedidos", pedidos);
 
         return "/comercial/detalle-comercial";
     }
