@@ -19,7 +19,7 @@ public class ComercialDAOImpl implements ComercialDAO {
 
 	@Override
 	public void create(Comercial comercial) {
-		String sql = "INSERT INTO comercial (nombre, apellido1, apellido2, comisión) VALUES (?, ?, ?, ?)";
+		String sql = "INSERT INTO comercial (nombre, apellido1, apellido2, comision) VALUES (?, ?, ?, ?)";
 		int rows = jdbcTemplate.update(sql, comercial.getNombre(), comercial.getApellido1(), comercial.getApellido2(), comercial.getComision());
 		log.info("Insertado Comercial: {} | Filas afectadas: {}", comercial, rows);
 	}
@@ -32,7 +32,7 @@ public class ComercialDAOImpl implements ComercialDAO {
 						rs.getString("nombre"),
 						rs.getString("apellido1"),
 						rs.getString("apellido2"),
-						rs.getFloat("comisión"))
+						rs.getFloat("comision"))
 		);
 		log.info("Devueltos {} registros.", listComercial.size());
 		return listComercial;
@@ -46,14 +46,14 @@ public class ComercialDAOImpl implements ComercialDAO {
 						rs.getString("nombre"),
 						rs.getString("apellido1"),
 						rs.getString("apellido2"),
-						rs.getFloat("comisión")), id)
+						rs.getFloat("comision")), id)
 				.stream()
 				.findFirst();
 	}
 
 	@Override
 	public void update(Comercial comercial) {
-		String sql = "UPDATE comercial SET nombre = ?, apellido1 = ?, apellido2 = ?, comisión = ? WHERE id = ?";
+		String sql = "UPDATE comercial SET nombre = ?, apellido1 = ?, apellido2 = ?, comision = ? WHERE id = ?";
 		int rows = jdbcTemplate.update(sql, comercial.getNombre(), comercial.getApellido1(), comercial.getApellido2(), comercial.getComision(), comercial.getId());
 		log.info("Actualizado Comercial: {} | Filas afectadas: {}", comercial, rows);
 	}

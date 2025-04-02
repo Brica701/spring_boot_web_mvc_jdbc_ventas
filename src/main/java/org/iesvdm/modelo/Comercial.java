@@ -1,21 +1,19 @@
 package org.iesvdm.modelo;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.util.List;
 
 @Data
-@AllArgsConstructor
-@NoArgsConstructor
+@AllArgsConstructor(access = AccessLevel.PRIVATE) // Evita problemas con el constructor completo
+@RequiredArgsConstructor // Crea un constructor sin la lista de pedidos
 public class Comercial {
 
-	private int id;
-	private String nombre;
-	private String apellido1;
-	private String apellido2;
-	private float comision;
+	private final int id;
+	private final String nombre;
+	private final String apellido1;
+	private final String apellido2;
+	private final float comision;
 
 	private List<Pedido> pedidos;
 }

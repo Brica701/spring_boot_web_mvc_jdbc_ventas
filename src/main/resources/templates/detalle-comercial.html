@@ -2,73 +2,77 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Detalles del Comercial</title>
-    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <title th:text="#{comercial.detalle.titulo}">Detalle Comercial</title>
+    <style>
+        .clearfix::after {
+            content: "";
+            display: block;
+            clear: both;
+        }
+    </style>
 </head>
 <body>
-<div class="container mt-5">
-    <h1 class="text-center mb-4">Detalles del Comercial</h1>
-
-    <div class="form-group">
-        <label>Nombre</label>
-        <input type="text" th:value="${comercial.nombre}" class="form-control" readonly="readonly">
-    </div>
-
-    <div class="form-group">
-        <label>Apellido 1</label>
-        <input type="text" th:value="${comercial.apellido1}" class="form-control" readonly="readonly">
-    </div>
-
-    <div class="form-group">
-        <label>Apellido 2</label>
-        <input type="text" th:value="${comercial.apellido2}" class="form-control" readonly="readonly">
-    </div>
-
-    <div class="form-group">
-        <label>Comisión</label>
-        <input type="text" th:value="${comercial.comision}" class="form-control" readonly="readonly">
-    </div>
-
-    <div class="form-group">
-        <h4>Pedidos del Comercial</h4>
-
-        <div th:each="pedido : ${comercial.pedidos}" class="mb-3">
-            <div class="form-group">
-                <label>ID del Pedido</label>
-                <input type="text" th:value="${pedido.id}" class="form-control" readonly="readonly">
-            </div>
-
-            <div class="form-group">
-                <label>Total</label>
-                <input type="text"
-                       th:value="${pedido.total}"
-                       th:class="${pedido.id == maxPedido.id ? 'bg-success text-white' : (pedido.id == minPedido.id ? 'bg-warning' : '')} + ' form-control'"
-                       readonly="readonly">
-            </div>
-
-            <div class="form-group">
-                <label>Fecha</label>
-                <input type="text" th:value="${#dates.format(pedido.fecha, 'yyyy-MM-dd')}" class="form-control" readonly="readonly">
-            </div>
-
-            <div class="form-group">
-                <label>Cliente</label>
-                <a th:href="@{/clientes/{id}(id=${pedido.cliente.id})}" class="form-control" style="background-color: #eaedf0; text-decoration: none">
-                    <span th:text="${pedido.cliente.nombre}"></span>
-                </a>
+<div id="contenedora" style="float:none; margin: 0 auto;width: 95%;">
+    <div class="clearfix">
+        <div style="float: left; width: 50%">
+            <h1 th:text="#{comercial.detalle.titulo}">Detalle Comercial</h1>
+        </div>
+        <div style="float: none;width: auto;overflow: hidden;min-height: 80px;position: relative;">
+            <div style="position: absolute; left: 39%; top : 39%;">
+                <form th:action="@{/comerciales/editar/${comercial.id}}" method="get">
+                    <input type="submit" th:value="#{comercial.editar}"/>
+                </form>
             </div>
         </div>
     </div>
 
-    <div class="form-group text-center">
-        <form action="/comerciales">
-            <button type="submit" class="btn btn-secondary">Volver</button>
-        </form>
+    <div class="clearfix">
+        <hr/>
+    </div>
+
+    <div th:if="${comercial != null}" class="clearfix">
+        <div style="float: left;width: 20%" th:text="#{comercial.id}">Id:</div>
+        <div style="float: left;width: 20%" th:text="${comercial.id}">0</div>
+    </div>
+    <div class="clearfix">
+        <div style="float: left;width: 20%" th:text="#{comercial.nombre}">Nombre:</div>
+        <div style="float: left;width: 20%" th:text="${comercial.nombre}">Nombre</div>
+    </div>
+    <div class="clearfix">
+        <div style="float: left;width: 20%" th:text="#{comercial.apellido1}">Apellido1:</div>
+        <div style="float: left;width: 20%" th:text="${comercial.apellido1}">Apellido1</div>
+    </div>
+    <div class="clearfix">
+        <div style="float: left;width: 20%" th:text="#{comercial.apellido2}">Apellido2:</div>
+        <div style="float: left;width: 20%" th:text="${comercial.apellido2 ?: '&nbsp;'}">Apellido2</div>
+    </div>
+    <div class="clearfix">
+        <div style="float: left;width: 20%" th:text="#{comercial.comision}">Comisión:</div>
+        <div style="float: left;width: 20%" th:text="${comercial.comision}">Comisión</div>
+    </div>
+
+    <div class="clearfix">
+        <hr/>
+    </div>
+
+    <div th:if="${comercial.pedidos != null}">
+        <h3 th:text="#{comercial.pedidos.titulo}">Pedidos</h3>
+        <div th:each="pedido : ${comercial.pedidos}">
+            <div class="clearfix">
+                <div style="float: left;width: 20%" th:text="#{pedido.id}">Id</div>
+                <div style="float: left;width: 20%" th:text="${pedido.id}">0</div>
+            </div>
+            <div class="clearfix">
+                <div style="float: left;width: 20%" th:text="#{pedido.fecha}">Fecha</div>
+                <div style="float: left;width: 20%" th:text="${pedido.fecha}">Fecha</div>
+            </div>
+            <div class="clearfix">
+                <div style="float: left;width: 20%" th:text="#{pedido.monto}">Monto</div>
+                <div style="float: left;width: 20%" th:text="${pedido.monto}">Monto</div>
+            </div>
+            <hr/>
+        </div>
     </div>
 </div>
-
-<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script>
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </body>
 </html>
