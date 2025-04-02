@@ -9,12 +9,12 @@ import lombok.Data;
 //Para generar un constructor con lombok con todos los args
 @AllArgsConstructor
 public class Cliente {
-	
+
 	private long id;
 	private String nombre;
 	private String apellido1;
 	private String apellido2;
 	private String ciudad;
 	private int categoria;
-	
+
 }
