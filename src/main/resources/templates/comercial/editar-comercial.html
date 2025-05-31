@@ -2,7 +2,7 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Crear Producto</title>
+    <title th:text="#{comercial.editar.titulo}">Editar Comercial</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"/>
 </head>
 <body>
@@ -10,31 +10,31 @@
     <form th:action="@{/comercial/editar/__${comercial.id}__}" th:object="${comercial}" method="post">
         <div class="row py-4 border-bottom">
             <div class="col-md-6">
-                <h1 class="display-4">Editar Comercial</h1>
+                <h1 class="display-4" th:text="#{comercial.editar.titulo}">Editar Comercial</h1>
             </div>
             <div class="col-md-6 d-flex justify-content-center">
-                <button class="btn btn-primary">Guardar</button>
+                <button class="btn btn-primary" th:text="#{boton.guardar}">Guardar</button>
             </div>
         </div>
 
         <div class="form-group">
-            <label for="nombre">Nombre:</label>
+            <label for="nombre" th:text="#{comercial.nombre} + ':'">Nombre:</label>
             <input type="text" id="nombre" th:field="*{nombre}" class="form-control"/>
         </div>
 
         <div class="form-group">
-            <label for="apellido1">Apellido1:</label>
+            <label for="apellido1" th:text="#{comercial.apellido1} + ':'">Apellido1:</label>
             <input type="text" id="apellido1" th:field="*{apellido1}" class="form-control"/>
         </div>
 
         <div class="form-group">
-            <label for="apellido2">Apellido2:</label>
+            <label for="apellido2" th:text="#{comercial.apellido2} + ':'">Apellido2:</label>
             <input type="text" id="apellido2" th:field="*{apellido2}" class="form-control"/>
         </div>
 
         <div class="form-group">
-            <label >Comisión:</label>
-            <input type="text" id="ciudad" th:field="*{comision}" class="form-control"/>
+            <label for="comision" th:text="#{comercial.comision} + ':'">Comisión:</label>
+            <input type="text" id="comision" th:field="*{comision}" class="form-control"/>
         </div>
     </form>
 </div>

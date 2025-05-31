@@ -2,18 +2,18 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Clientes</title>
+    <title th:text="#{cliente.listado}">Clientes</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"/>
 </head>
 <body>
 <div id="contenedora" class="container my-4">
     <div class="row align-items-center mb-4">
         <div class="col-md-6">
-            <h1>Clientes</h1>
+            <h1 th:text="#{cliente.listado}">Clientes</h1>
         </div>
         <div class="col-md-6 text-md-right">
             <form action="/clientes/crear">
-                <button type="submit" class="btn btn-primary">Crear</button>
+                <button type="submit" class="btn btn-primary" th:text="#{cliente.nuevo}">Crear</button>
             </form>
         </div>
         <div class="col-md-12 text-md-right">
@@ -26,11 +26,11 @@
     <hr/>
     <div class="row">
         <span class="col-1"><strong>Id</strong></span>
-        <span class="col text-center"><strong>Nombre</strong></span>
-        <span class="col text-center"><strong>Apellido1</strong></span>
-        <span class="col text-center"><strong>Apellido2</strong></span>
-        <span class="col text-center"><strong>Ciudad</strong></span>
-        <span class="col text-center"><strong>Categoría</strong></span>
+        <span class="col text-center"><strong th:text="#{cliente.nombre}">Nombre</strong></span>
+        <span class="col text-center"><strong th:text="#{cliente.apellido1}">Apellido1</strong></span>
+        <span class="col text-center"><strong th:text="#{cliente.apellido2}">Apellido2</strong></span>
+        <span class="col text-center"><strong th:text="#{cliente.ciudad}">Ciudad</strong></span>
+        <span class="col text-center"><strong th:text="#{cliente.categoria}">Categoría</strong></span>
         <span class="col"><strong>Acción</strong></span>
     </div>
     <hr/>
@@ -44,20 +44,18 @@
         <span class="col text-center" th:text="${cliente.categoria}">categoría</span>
         <span class="col">
         <div class="btn-group d-flex justify-content-around" role="group">
-        <form class="d-inline" th:action="@{/clientes/detalles/{id}(id=${cliente.id})}">
-                <button type="submit" class="btn btn-info btn-sm">Detalle</button>
+            <form class="d-inline" th:action="@{/clientes/detalles/{id}(id=${cliente.id})}">
+                <button type="submit" class="btn btn-info btn-sm" th:text="#{cliente.detalle}">Detalle</button>
             </form>
             <form class="d-inline" th:action="@{/clientes/editar/__${cliente.id}__}">
-                <button type="submit" class="btn btn-success btn-sm">Editar</button>
+                <button type="submit" class="btn btn-success btn-sm" th:text="#{cliente.editar}">Editar</button>
             </form>
             <form class="d-inline" th:action="@{/clientes/borrar/__${cliente.id}__}" method="post">
                 <button type="submit" class="btn btn-danger btn-sm">Eliminar</button>
             </form>
         </div>
-    </span>
+        </span>
     </div>
-
-
 </div>
 
 <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>

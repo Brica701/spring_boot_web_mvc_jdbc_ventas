@@ -2,7 +2,7 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Detalles Cliente</title>
+    <title th:text="#{cliente.detalles}">Detalles Cliente</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"/>
 </head>
 <body>
@@ -10,57 +10,51 @@
 <div class="container mt-5">
     <div class="col-md-12 text-md-right">
         <form action="/clientes">
-            <button type="submit" class="btn btn-primary">Volver</button>
+            <button type="submit" class="btn btn-primary" th:text="#{cliente.volver}">Volver</button>
         </form>
     </div>
-
 
     <div th:if="${clienteDTO}">
         <div class="row">
             <div class="col-12">
-                <h1 th:text="'Detalles de ' + ${clienteDTO.nombre}" class="display-4"></h1>
+                <h1 class="display-4" th:text="#{cliente.detallesDe} + ' ' + ${clienteDTO.nombre}">Detalles de Nombre</h1>
             </div>
         </div>
 
         <div class="row">
             <div class="col-md-4">
-                <p><strong>Nombre:</strong> <span th:text="${clienteDTO.nombre}"></span></p>
+                <p><strong th:text="#{cliente.nombre} + ':'">Nombre:</strong> <span th:text="${clienteDTO.nombre}"></span></p>
             </div>
             <div class="col-md-4">
-                <p><strong>Apellido:</strong> <span th:text="${clienteDTO.apellido1}"></span></p>
+                <p><strong th:text="#{cliente.apellido1} + ':'">Apellido:</strong> <span th:text="${clienteDTO.apellido1}"></span></p>
             </div>
             <div class="col-md-4">
-                <p><strong>Ciudad:</strong> <span th:text="${clienteDTO.ciudad}"></span></p>
+                <p><strong th:text="#{cliente.ciudad} + ':'">Ciudad:</strong> <span th:text="${clienteDTO.ciudad}"></span></p>
             </div>
         </div>
 
         <div class="row mt-4">
             <div class="col-12">
-                <h2>Pedidos:</h2>
+                <h2 th:text="#{cliente.pedidos}">Pedidos:</h2>
             </div>
         </div>
 
         <div class="row">
-
-            <div th:if="${clienteDTO.pedidos.isEmpty()}" class=" col-12 alert alert-danger">
-                <p>No hay pedidos para este cliente.</p>
+            <div th:if="${clienteDTO.pedidos.isEmpty()}" class="col-12 alert alert-danger">
+                <p th:text="#{cliente.sinPedidos}">No hay pedidos para este cliente.</p>
             </div>
 
             <ul th:if="${!clienteDTO.pedidos.isEmpty()}" class="list-group col-12">
                 <li th:each="pedidoDTO : ${clienteDTO.pedidos}" class="list-group-item">
-
                     <div class="col-md-4">
-                        <p><strong>ID Pedido :</strong> <span th:text="${pedidoDTO.id}"></span></p>
+                        <p><strong th:text="#{pedido.id} + ':'">ID Pedido:</strong> <span th:text="${pedidoDTO.id}"></span></p>
                     </div>
-
                     <div class="col-md-4">
-                        <p><strong>Fecha:</strong> <span th:text="${pedidoDTO.fecha}"></span></p>
+                        <p><strong th:text="#{pedido.fecha} + ':'">Fecha:</strong> <span th:text="${pedidoDTO.fecha}"></span></p>
                     </div>
-
                     <div class="col-md-4">
-                        <p><strong>Total:</strong> <span th:text="${pedidoDTO.total}"></span>€</p>
+                        <p><strong th:text="#{pedido.total} + ':'">Total:</strong> <span th:text="${pedidoDTO.total}"></span>€</p>
                     </div>
-
                 </li>
             </ul>
         </div>

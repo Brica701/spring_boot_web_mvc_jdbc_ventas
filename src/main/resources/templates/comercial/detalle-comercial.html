@@ -2,7 +2,7 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Detalles Comercial</title>
+    <title th:text="#{comercial.detalles.titulo}">Detalles Comercial</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"/>
 </head>
 <body>
@@ -11,39 +11,35 @@
 
     <div class="col-md-12 text-md-right">
         <form action="/comercial">
-            <button type="submit" class="btn btn-primary">Volver</button>
+            <button type="submit" class="btn btn-primary" th:text="#{boton.volver}">Volver</button>
         </form>
     </div>
-
 
     <div th:if="${comercial}">
         <div class="row">
             <div class="col-12 my-4">
-                <h1 th:text="'Detalles de Comercial  ' + ${comercial.nombre}" class="display-4"></h1>
+                <h1 class="display-4" th:text="#{comercial.detalles.titulo} + ' ' + ${comercial.nombre}">Detalles de Comercial</h1>
             </div>
         </div>
 
         <div class="row">
             <div class="col-md-4">
-                <p><strong>Nombre:</strong> <span th:text="${comercial.nombre}"></span></p>
+                <p><strong th:text="#{comercial.nombre} + ':'">Nombre:</strong> <span th:text="${comercial.nombre}"></span></p>
             </div>
             <div class="col-md-4">
-                <p><strong>Apellido 1:</strong> <span th:text="${comercial.apellido1}"></span></p>
+                <p><strong th:text="#{comercial.apellido1} + ':'">Apellido 1:</strong> <span th:text="${comercial.apellido1}"></span></p>
             </div>
             <div class="col-md-4">
-                <p><strong>Apellido 2:</strong> <span th:text="${comercial.apellido2}"></span></p>
+                <p><strong th:text="#{comercial.apellido2} + ':'">Apellido 2:</strong> <span th:text="${comercial.apellido2}"></span></p>
             </div>
 
             <div class="col-md-4">
-                <p><strong>Comisión:</strong> <span th:text="${comercial.comision}"></span></p>
+                <p><strong th:text="#{comercial.comision} + ':'">Comisión:</strong> <span th:text="${comercial.comision}"></span></p>
             </div>
             <div class="col-md-4">
-                <p><strong>Cantidad Pedido:</strong> <span th:text="${cantidad}"></span></p>
+                <p><strong th:text="#{comercial.cantidadPedidos} + ':'">Cantidad Pedido:</strong> <span th:text="${cantidad}"></span></p>
             </div>
-
         </div>
-
-
     </div>
 </div>
 
