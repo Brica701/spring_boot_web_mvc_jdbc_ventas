@@ -2,7 +2,7 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title th:text="#{cliente.nuevo}">Crear Producto</title>
+    <title th:text="#{cliente.nuevo}">Crear Cliente</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"/>
 </head>
 <body>
@@ -10,36 +10,49 @@
     <form th:action="@{/clientes/crear}" th:object="${cliente}" method="post">
         <div class="row py-4 border-bottom">
             <div class="col-md-6">
-                <h1 class="display-4" th:text="#{cliente.nuevo}">Crear Producto</h1>
+                <h1 class="display-4" th:text="#{cliente.nuevo}">Crear Cliente</h1>
             </div>
             <div class="col-md-6 d-flex justify-content-center">
                 <button class="btn btn-primary" th:text="#{cliente.guardar}">Guardar</button>
             </div>
         </div>
 
+        <!-- Nombre -->
         <div class="form-group">
             <label for="nombre" th:text="#{cliente.nombre} + ':'">Nombre:</label>
-            <input type="text" id="nombre" th:field="*{nombre}" class="form-control" required/>
+            <input type="text" id="nombre" th:field="*{nombre}" class="form-control"
+                   th:classappend="${#fields.hasErrors('nombre')} ? 'is-invalid'"/>
+            <div class="invalid-feedback" th:errors="*{nombre}">Nombre error</div>
         </div>
 
+        <!-- Apellido1 -->
         <div class="form-group">
-            <label for="apellido1" th:text="#{cliente.apellido1} + ':'">Apellido1:</label>
-            <input type="text" id="apellido1" th:field="*{apellido1}" class="form-control" required />
+            <label for="apellido1" th:text="#{cliente.apellido1} + ':'">Primer Apellido:</label>
+            <input type="text" id="apellido1" th:field="*{apellido1}" class="form-control"
+                   th:classappend="${#fields.hasErrors('apellido1')} ? 'is-invalid'"/>
+            <div class="invalid-feedback" th:errors="*{apellido1}">Apellido error</div>
         </div>
 
+        <!-- Apellido2 -->
         <div class="form-group">
-            <label for="apellido2" th:text="#{cliente.apellido2} + ':'">Apellido2:</label>
-            <input type="text" id="apellido2" th:field="*{apellido2}" class="form-control " required/>
+            <label for="apellido2" th:text="#{cliente.apellido2} + ':'">Segundo Apellido:</label>
+            <input type="text" id="apellido2" th:field="*{apellido2}" class="form-control"/>
         </div>
 
+        <!-- Ciudad -->
         <div class="form-group">
             <label for="ciudad" th:text="#{cliente.ciudad} + ':'">Ciudad:</label>
-            <input type="text" id="ciudad" th:field="*{ciudad}" class="form-control" required/>
+            <input type="text" id="ciudad" th:field="*{ciudad}" class="form-control"
+                   th:classappend="${#fields.hasErrors('ciudad')} ? 'is-invalid'"/>
+            <div class="invalid-feedback" th:errors="*{ciudad}">Ciudad error</div>
         </div>
 
+        <!-- Categoría -->
         <div class="form-group">
             <label for="categoria" th:text="#{cliente.categoria} + ':'">Categoría:</label>
-            <input type="number" id="categoria" th:field="*{categoria}" class="form-control" required/>
+            <input type="number" id="categoria" th:field="*{categoria}" class="form-control"
+                   th:classappend="${#fields.hasErrors('categoria')} ? 'is-invalid'"/>
+            <div class="invalid-feedback" th:errors="*{categoria}">Categoría error</div>
         </div>
     </form>
 </div>
