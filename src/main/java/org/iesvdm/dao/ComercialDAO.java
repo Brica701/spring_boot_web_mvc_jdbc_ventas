@@ -11,7 +11,9 @@ public interface ComercialDAO {
 	
 	public List<Comercial> getAll();
 	public Optional<Comercial>  find(int id);
-	
+
+	int getCantidadPedidos(int id_comercial);
+
 	public void update(Comercial cliente);
 	
 	public void delete(long id);
