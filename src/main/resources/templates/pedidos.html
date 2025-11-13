@@ -26,7 +26,6 @@
         </tr>
         </thead>
         <tbody>
-        <!-- Cambiado a listaPedidos para que coincida con el atributo del modelo -->
         <tr th:each="pedido : ${listaPedidos}">
             <td th:text="${pedido.id}">0</td>
             <td th:text="${pedido.idCliente}">0</td>
@@ -34,10 +33,11 @@
             <td th:text="${pedido.fecha}">2025-11-13</td>
             <td th:text="${pedido.total}">0.0</td>
             <td>
-                <a th:href="@{/pedidos/editar/__${pedido.id}__}" class="btn btn-warning btn-sm me-1">Editar</a>
-                <form th:action="@{/pedidos/borrar/__${pedido.id}__}" method="post" class="d-inline">
-                    <button type="submit" class="btn btn-danger btn-sm">Eliminar</button>
-                </form>
+                <!-- Botón Editar -->
+                <a th:href="@{/pedidos/editar/{id}(id=${pedido.id})}" class="btn btn-warning btn-sm me-1">Editar</a>
+
+                <!-- Botón Eliminar → abre la confirmación -->
+                <a th:href="@{/pedidos/eliminar/{id}(id=${pedido.id})}" class="btn btn-danger btn-sm">Eliminar</a>
             </td>
         </tr>
         </tbody>
