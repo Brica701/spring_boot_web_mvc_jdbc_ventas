@@ -1,10 +1,13 @@
 package org.iesvdm.controlador;
 
+import org.iesvdm.modelo.Cliente;
 import org.iesvdm.modelo.Comercial;
 import org.iesvdm.service.ComercialService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PostMapping;
 
 import java.util.List;
 
@@ -34,6 +37,18 @@ public class ComercialController {
 
         return "comerciales";  // nombre de la vista Thymeleaf (comerciales.html)
 
+    }
+
+    @GetMapping("/comerciales/crear_comercial")
+    public String crearComercial(Model model) {
+        model.addAttribute("comercial", new Comercial());
+        return "crear_comercial";
+    }
+
+    @PostMapping("/comerciales/crear_comercial")
+    public String crearCliente(@ModelAttribute("comercial") Comercial comercial) {
+        comercialService.create(comercial);
+        return "redirect:/comerciales";
     }
 
 }
