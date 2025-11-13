@@ -3,13 +3,19 @@ package org.iesvdm.service;
 import java.util.List;
 
 import org.iesvdm.dao.ClienteDAO;
+import org.iesvdm.dao.PedidoDAO;
 import org.iesvdm.modelo.Cliente;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
 public class ClienteService {
-	
+
+
+	@Autowired
 	private ClienteDAO clienteDAO;
+    @Autowired
+    protected PedidoDAO pedidoDAO;
 	
 	//Se utiliza inyección automática por constructor del framework Spring.
 	//Por tanto, se puede omitir la anotación Autowired
@@ -30,6 +36,17 @@ public class ClienteService {
 	
 	public void create(Cliente cliente) {
         clienteDAO.create(cliente);
+    }
+
+    public void delete(long id) {
+    	clienteDAO.delete(id);
+    }
+
+    // Nuevo método: verifica si se puede borrar el cliente
+    public boolean canDelete(long clienteId) {
+        // Si el cliente NO tiene pedidos, se puede borrar
+        return pedidoDAO.getAll().stream()
+                .noneMatch(p -> p.getIdCliente() == clienteId);
     }
 
 }

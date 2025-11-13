@@ -7,6 +7,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 
 import java.util.List;
@@ -50,5 +51,75 @@ public class ComercialController {
         comercialService.create(comercial);
         return "redirect:/comerciales";
     }
+    // Ver detalle de un comercial
+    @GetMapping("/comerciales/{id}")
+    public String verDetalleComercial(@PathVariable("id") long id, Model model) {
+        var comercialOpt = comercialService.listAll()
+                .stream()
+                .filter(c -> c.getId() == id)
+                .findFirst();
+        if (comercialOpt.isPresent()) {
+            model.addAttribute("comercial", comercialOpt.get());
+            return "ver_comercial";
+        } else {
+            return "redirect:/comerciales";
+        }
+
+    }
+
+
+// Procesar formulario de edición
+
+    @GetMapping("/comerciales/editar/{id}")
+    public String mostrarFormularioEdicion(@PathVariable("id") int id, Model model) {
+        var comercialOpt = comercialService
+                .listAll()
+                .stream()
+                .filter(c -> c.getId() == id)
+                .findFirst();
+        if (comercialOpt.isPresent()) {
+            model.addAttribute("comercial", comercialOpt.get());
+            return "editar_comercial";
+        } else {
+            return "redirect:/comerciales";
+        }
+    }
+
+    @PostMapping("/comerciales/editar/{id}")
+    public String actualizarComercial(@PathVariable("id") int id, @ModelAttribute("comercial") Comercial comercial) {
+        comercial.setId(id);
+        comercialService.update(comercial);
+        return "redirect:/comerciales";
+    }
+
+    // Mostrar confirmación de eliminación
+    @GetMapping("/comerciales/eliminar/{id}")
+    public String mostrarConfirmacionEliminarComercial(@PathVariable("id") long id, Model model) {
+        var comercialOpt = comercialService.listAll()
+                .stream()
+                .filter(c -> c.getId() == id)
+                .findFirst();
+        if (comercialOpt.isPresent()) {
+            model.addAttribute("comercial", comercialOpt.get());
+            model.addAttribute("comercialPuedeEliminarse", comercialService.canDelete(id));
+            return "eliminar_comercial";
+        } else {
+            return "redirect:/comerciales";
+        }
+    }
+
+    // Procesar eliminación
+    @PostMapping("/comerciales/eliminar/{id}")
+    public String eliminarComercial(@PathVariable("id") long id, Model model) {
+        if (comercialService.canDelete(id)) {
+            comercialService.delete(id);
+        } else {
+            model.addAttribute("listaComerciales", comercialService.listAll());
+            model.addAttribute("error", "No se puede eliminar el cliente porque tiene pedidos asociados.");
+            return "comerciales"; // o redirigir a lista con mensaje
+        }
+        return "redirect:/comerciales";
+    }
+
 
 }

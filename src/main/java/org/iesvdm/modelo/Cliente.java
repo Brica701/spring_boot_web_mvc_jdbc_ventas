@@ -1,8 +1,6 @@
 package org.iesvdm.modelo;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnNotWebApplication;
 
 //La anotación @Data de lombok proporcionará el código de:
@@ -12,6 +10,8 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnNotWebAppli
 //Para generar un constructor con lombok con todos los args
 @AllArgsConstructor
 @NoArgsConstructor
+@Getter
+@Setter
 public class Cliente {
 	
 	private long id;

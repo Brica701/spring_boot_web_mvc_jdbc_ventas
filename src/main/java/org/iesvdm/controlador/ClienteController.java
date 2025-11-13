@@ -3,6 +3,7 @@ package org.iesvdm.controlador;
 import java.util.List;
 
 import org.iesvdm.modelo.Cliente;
+import org.iesvdm.modelo.Pedido;
 import org.iesvdm.service.ClienteService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -48,4 +49,73 @@ public class ClienteController {
         return "redirect:/clientes";
     }
 
+	// Procesar formulario de edición
+
+	@GetMapping("/clientes/editar/{id}")
+	public String mostrarFormularioEdicion(@PathVariable("id") long id, Model model) {
+		var clienteOpt = clienteService.listAll()
+				.stream()
+				.filter(c -> c.getId() == id)
+				.findFirst();
+		if (clienteOpt.isPresent()) {
+			model.addAttribute("cliente", clienteOpt.get()); // 🔑 Thymeleaf necesita esto
+			return "editar_cliente";
+		} else {
+			return "redirect:/clientes"; // si no existe el cliente
+		}
+	}
+
+	@PostMapping("/clientes/editar/{id}")
+	public String actualizarCliente(@PathVariable("id") long id, @ModelAttribute("cliente") Cliente cliente) {
+		cliente.setId(id);
+		clienteService.update(cliente);
+		return "redirect:/clientes";
+	}
+
+	// Ver detalle de un cliente
+	@GetMapping("/clientes/{id}")
+	public String verDetalleCliente(@PathVariable("id") long id, Model model) {
+		var clienteOpt = clienteService.listAll()
+				.stream()
+				.filter(c -> c.getId() == id)
+				.findFirst();
+		if (clienteOpt.isPresent()) {
+			model.addAttribute("cliente", clienteOpt.get());
+			return "ver_cliente";
+		} else {
+			return "redirect:/clientes";
+		}
+
+	}
+
+	@GetMapping("/clientes/eliminar/{id}")
+	public String mostrarConfirmacionEliminar(@PathVariable("id") long id, Model model) {
+		var clienteOpt = clienteService.listAll()
+				.stream()
+				.filter(c -> c.getId() == id)
+				.findFirst();
+		if (clienteOpt.isPresent()) {
+			model.addAttribute("cliente", clienteOpt.get());
+
+			// 🔑 Aquí agregamos la verificación
+			model.addAttribute("clientePuedeEliminarse", clienteService.canDelete(id));
+
+			return "eliminar_cliente"; // la vista de confirmación
+		} else {
+			return "redirect:/clientes"; // si no existe el cliente
+		}
+	}
+
+	// Procesar eliminación
+	@PostMapping("/clientes/eliminar/{id}")
+	public String eliminarCliente(@PathVariable("id") long id, Model model) {
+		if (clienteService.canDelete(id)) {
+			clienteService.delete(id);
+		} else {
+			model.addAttribute("listaClientes", clienteService.listAll());
+			model.addAttribute("error", "No se puede eliminar el cliente porque tiene pedidos asociados.");
+			return "clientes"; // ahora Thymeleaf tiene todo lo que necesita
+		}
+		return "redirect:/clientes";
+	}
 }

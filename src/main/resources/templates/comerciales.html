@@ -33,11 +33,13 @@
             <td th:text="${comercial.apellido2 ?: '&nbsp;'}">apellido2</td>
             <td th:text="${comercial.comision}">comision</td>
             <td>
-                <a th:href="@{/comerciales/__${comercial.id}__}" class="btn btn-info btn-sm me-1">Ver Detalle</a>
-                <a th:href="@{/comerciales/editar/}+${comercial.id}" class="btn btn-warning btn-sm me-1">Editar</a>
-                <form th:action="@{/comerciales/borrar/__${comercial.id}__}" method="post" class="d-inline">
-                    <button type="submit" class="btn btn-danger btn-sm">Eliminar</button>
-                </form>
+                <!-- Ver detalle -->
+                <a th:href="@{/comerciales/{id}(id=${comercial.id})}" class="btn btn-info btn-sm me-1">Ver Detalle</a>
+                <!-- Editar -->
+                <a th:href="@{/comerciales/editar/{id}(id=${comercial.id})}" class="btn btn-warning btn-sm me-1">Editar</a>
+                <!-- Eliminar -->
+                <a th:href="@{/comerciales/eliminar/{id}(id=${comercial.id})}" class="btn btn-danger btn-sm">Eliminar</a>
+
             </td>
         </tr>
         </tbody>
