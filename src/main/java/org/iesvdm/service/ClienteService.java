@@ -15,15 +15,21 @@ public class ClienteService {
 	//Por tanto, se puede omitir la anotación Autowired
 	//@Autowired
 	public ClienteService(ClienteDAO clienteDAO) {
-		this.clienteDAO = clienteDAO;
+        this.clienteDAO = clienteDAO;
 	}
+
+    // Devuelve todos los clientes
+    public List<Cliente> listAll() {
+        return clienteDAO.getAll();
+    }
+
+    // Guarda o actualiza un cliente
+    public void update(Cliente cliente) {
+        clienteDAO.update(cliente);
+    }
 	
-	public List<Cliente> listAll() {
-		
-		return clienteDAO.getAll();
-		
-	}
-	
-	
+	public void create(Cliente cliente) {
+        clienteDAO.create(cliente);
+    }
 
 }

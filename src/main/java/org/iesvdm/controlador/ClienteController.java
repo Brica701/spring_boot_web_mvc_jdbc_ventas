@@ -6,9 +6,7 @@ import org.iesvdm.modelo.Cliente;
 import org.iesvdm.service.ClienteService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.*;
 
 @Controller
 //Se puede fijar ruta base de las peticiones de este controlador.
@@ -37,10 +35,17 @@ public class ClienteController {
 		return "clientes";
 		
 	}
-	
-	
-	
-	
-	
+
+    @GetMapping("/clientes/crear_cliente")
+    public String crearCliente(Model model) {
+    	model.addAttribute("cliente", new Cliente());
+    	return "crear_cliente";
+    }
+
+    @PostMapping("/clientes/crear_cliente")
+    public String crearCliente(@ModelAttribute("cliente") Cliente cliente) {
+        clienteService.create(cliente);
+        return "redirect:/clientes";
+    }
 
 }

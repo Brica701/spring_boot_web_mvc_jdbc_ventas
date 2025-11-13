@@ -24,10 +24,17 @@ public class ComercialDAOImpl implements ComercialDAO {
 	private JdbcTemplate jdbcTemplate;
 	
 	@Override
-	public void create(Comercial cliente) {
-		// TODO Auto-generated method stub
+    public void create(Comercial comercial) {
+        int rows = jdbcTemplate.update(
+                "INSERT INTO comercial (nombre, apellido1, apellido2, comision) VALUES (?, ?, ?, ?)",
+                comercial.getNombre(),
+                comercial.getApellido1(),
+                comercial.getApellido2(),
+                comercial.getComision()
+        );
 
-	}
+        log.info("Insertados {} registros.", rows);
+    }
 
 	@Override
 	public List<Comercial> getAll() {
@@ -38,7 +45,7 @@ public class ComercialDAOImpl implements ComercialDAO {
                 							  rs.getString("nombre"), 
                 							  rs.getString("apellido1"),
                 							  rs.getString("apellido2"), 
-                							  rs.getFloat("comisión"))
+                							  rs.getFloat("comision"))
                 						 	
         );
 		
@@ -47,22 +54,41 @@ public class ComercialDAOImpl implements ComercialDAO {
         return listComercial;
 	}
 
-	@Override
-	public Optional<Comercial> find(int id) {
-		// TODO Auto-generated method stub
-		return Optional.empty();
-	}
+    @Override
+    public Optional<Comercial> find(int id) {
+        Comercial comercial = jdbcTemplate.queryForObject(
+                "SELECT * FROM comercial WHERE id = ?",
+                (rs, rowNum) -> new Comercial(
+                        rs.getInt("id"),
+                        rs.getString("nombre"),
+                        rs.getString("apellido1"),
+                        rs.getString("apellido2"),
+                        rs.getFloat("comision")
+                ),
+                id
+        );
 
-	@Override
-	public void update(Comercial cliente) {
-		// TODO Auto-generated method stub
+        log.info("Encontrado comercial: {}", comercial);
+        return Optional.ofNullable(comercial);
+    }
 
-	}
+    @Override
+    public void update(Comercial comercial) {
+        int rows = jdbcTemplate.update(
+                "UPDATE comercial SET nombre = ?, apellido1 = ?, apellido2 = ?, comision = ? WHERE id = ?",
+                comercial.getNombre(),
+                comercial.getApellido1(),
+                comercial.getApellido2(),
+                comercial.getComision(),
+                comercial.getId()
+        );
 
-	@Override
-	public void delete(long id) {
-		// TODO Auto-generated method stub
+        log.info("Actualizados {} registros.", rows);
+    }
 
-	}
-
+    @Override
+    public void delete(long id) {
+        int rows = jdbcTemplate.update("DELETE FROM comercial WHERE id = ?", id);
+        log.info("Eliminados {} registros.", rows);
+    }
 }
