@@ -11,6 +11,8 @@
     <h1>Crear Comercial</h1>
 
     <form th:action="@{/comerciales/crear_comercial}" th:object="${comercial}" method="post">
+        <!-- Eliminado CSRF porque no usamos Spring Security -->
+
         <div class="mb-3">
             <label for="nombre" class="form-label">Nombre</label>
             <input type="text" th:field="*{nombre}" class="form-control" id="nombre" placeholder="Nombre" required>

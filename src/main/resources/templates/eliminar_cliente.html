@@ -24,7 +24,8 @@
             </ul>
 
             <div th:if="${clientePuedeEliminarse}">
-                <form th:action="@{/clientes/eliminar/{id}(id=${cliente.id})}" method="post">
+                <!-- Cambiamos la acción del formulario a query parameter -->
+                <form th:action="@{/clientes/eliminar(id=${cliente.id})}" method="post">
                     <button type="submit" class="btn btn-danger">Eliminar</button>
                     <a th:href="@{/clientes}" class="btn btn-secondary ms-2">Cancelar</a>
                 </form>

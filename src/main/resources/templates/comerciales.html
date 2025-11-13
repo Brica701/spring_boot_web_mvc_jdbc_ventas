@@ -33,13 +33,14 @@
             <td th:text="${comercial.apellido2 ?: '&nbsp;'}">apellido2</td>
             <td th:text="${comercial.comision}">comision</td>
             <td>
-                <!-- Ver detalle -->
-                <a th:href="@{/comerciales/{id}(id=${comercial.id})}" class="btn btn-info btn-sm me-1">Ver Detalle</a>
-                <!-- Editar -->
-                <a th:href="@{/comerciales/editar/{id}(id=${comercial.id})}" class="btn btn-warning btn-sm me-1">Editar</a>
-                <!-- Eliminar -->
-                <a th:href="@{/comerciales/eliminar/{id}(id=${comercial.id})}" class="btn btn-danger btn-sm">Eliminar</a>
+                <!-- Botón Editar -->
+                <a th:href="@{/comerciales/editar(id=${comercial.id})}" class="btn btn-warning btn-sm me-1">Editar</a>
 
+                <!-- Botón Detalle -->
+                <a th:href="@{/comerciales/ver(id=${comercial.id})}" class="btn btn-info btn-sm me-1">Detalle</a>
+
+                <!-- Botón Eliminar -->
+                <a th:href="@{/comerciales/eliminar(id=${comercial.id})}" class="btn btn-danger btn-sm">Eliminar</a>
             </td>
         </tr>
         </tbody>

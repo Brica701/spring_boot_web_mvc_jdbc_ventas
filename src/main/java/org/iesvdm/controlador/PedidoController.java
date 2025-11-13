@@ -23,14 +23,14 @@ public class PedidoController {
     public String listarPedidos(Model model) {
         List<Pedido> listaPedidos = pedidoService.getAll();
         model.addAttribute("listaPedidos", listaPedidos);
-        return "pedidos"; // Thymeleaf: pedidos.html
+        return "pedidos";
     }
 
     // Mostrar formulario para crear pedido
     @GetMapping("/pedidos/crear_pedido")
     public String mostrarFormulario(Model model) {
         model.addAttribute("pedido", new Pedido());
-        return "crear_pedido"; // Thymeleaf: crear_pedido.html
+        return "crear_pedido";
     }
 
     // Procesar formulario de creación
@@ -40,29 +40,29 @@ public class PedidoController {
         return "redirect:/pedidos";
     }
 
-    //Mostrar el editar pedido
-    @GetMapping("/pedidos/editar/{id}")
-    public String mostrarFormularioEdicion(@PathVariable("id") int id, Model model) {
+    // Mostrar formulario de edición
+    @GetMapping("/pedidos/editar")
+    public String mostrarFormularioEdicion(@RequestParam("id") int id, Model model) {
         var pedidoOpt = pedidoService.find(id);
         if (pedidoOpt.isPresent()) {
             model.addAttribute("pedido", pedidoOpt.get());
-            return "editar_pedido"; // 👈 aquí coincide con tu archivo HTML
+            return "editar_pedido";
         } else {
             return "redirect:/pedidos";
         }
     }
 
     // Procesar formulario de edición
-    @PostMapping("/pedidos/editar/{id}")
-    public String actualizarPedido(@PathVariable("id") int id, @ModelAttribute("pedido") Pedido pedido) {
+    @PostMapping("/pedidos/editar")
+    public String actualizarPedido(@RequestParam("id") int id, @ModelAttribute("pedido") Pedido pedido) {
         pedido.setId(id);
         pedidoService.update(pedido);
         return "redirect:/pedidos";
     }
 
-    // Mostrar formulario de confirmación
-    @GetMapping("/pedidos/eliminar/{id}")
-    public String mostrarConfirmacionEliminar(@PathVariable("id") int id, Model model) {
+    // Mostrar confirmación de eliminación
+    @GetMapping("/pedidos/eliminar")
+    public String mostrarConfirmacionEliminar(@RequestParam("id") int id, Model model) {
         var pedidoOpt = pedidoService.find(id);
         if (pedidoOpt.isPresent()) {
             model.addAttribute("pedido", pedidoOpt.get());
@@ -72,9 +72,9 @@ public class PedidoController {
         }
     }
 
-    // Procesar la eliminación (POST)
-    @PostMapping("/pedidos/eliminar/{id}")
-    public String eliminarPedido(@PathVariable("id") int id) {
+    // Procesar eliminación
+    @PostMapping("/pedidos/eliminar")
+    public String eliminarPedido(@RequestParam("id") int id) {
         pedidoService.delete(id);
         return "redirect:/pedidos";
     }

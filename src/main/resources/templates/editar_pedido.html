@@ -8,30 +8,30 @@
 </head>
 <body>
 <div class="container mt-5">
-    <h1 class="mb-4">Editar Pedido</h1>
+    <h1>Editar Pedido</h1>
 
-    <form th:action="@{/pedidos/editar/{id}(id=${pedido.id})}" th:object="${pedido}" method="post">
+    <form th:action="@{/pedidos/editar}" th:object="${pedido}" method="post">
+        <!-- Mantener el ID del pedido como campo oculto -->
+        <input type="hidden" th:field="*{id}" />
+
         <div class="mb-3">
             <label for="idCliente" class="form-label">ID Cliente</label>
             <input type="number" th:field="*{idCliente}" class="form-control" id="idCliente" placeholder="ID Cliente" required>
         </div>
-
         <div class="mb-3">
             <label for="idComercial" class="form-label">ID Comercial</label>
             <input type="number" th:field="*{idComercial}" class="form-control" id="idComercial" placeholder="ID Comercial" required>
         </div>
-
         <div class="mb-3">
             <label for="fecha" class="form-label">Fecha</label>
             <input type="date" th:field="*{fecha}" class="form-control" id="fecha" required>
         </div>
-
         <div class="mb-3">
             <label for="total" class="form-label">Total</label>
             <input type="number" step="0.01" th:field="*{total}" class="form-control" id="total" placeholder="Total" required>
         </div>
 
-        <button type="submit" class="btn btn-success">Guardar cambios</button>
+        <button type="submit" class="btn btn-primary">Guardar Cambios</button>
         <a th:href="@{/pedidos}" class="btn btn-secondary ms-2">Cancelar</a>
     </form>
 </div>

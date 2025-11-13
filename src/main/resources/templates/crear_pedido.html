@@ -11,6 +11,8 @@
     <h1>Crear Pedido</h1>
 
     <form th:action="@{/pedidos/crear_pedido}" th:object="${pedido}" method="post">
+        <!-- Eliminado CSRF porque no usamos Spring Security -->
+
         <div class="mb-3">
             <label for="idCliente" class="form-label">ID Cliente</label>
             <input type="number" th:field="*{idCliente}" class="form-control" id="idCliente" placeholder="ID Cliente" required>

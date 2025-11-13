@@ -24,7 +24,8 @@
             </ul>
 
             <!-- FORMULARIO POST para eliminar -->
-            <form th:action="@{/pedidos/eliminar/{id}(id=${pedido.id})}" method="post">
+            <form th:action="@{/pedidos/eliminar}" method="post">
+                <input type="hidden" name="id" th:value="${pedido.id}" />
                 <button type="submit" class="btn btn-danger">Eliminar</button>
                 <a th:href="@{/pedidos}" class="btn btn-secondary ms-2">Cancelar</a>
             </form>

@@ -23,7 +23,9 @@
             </ul>
 
             <div th:if="${comercialPuedeEliminarse}">
-                <form th:action="@{/comerciales/eliminar/{id}(id=${comercial.id})}" method="post">
+                <form th:action="@{/comerciales/eliminar}" method="post">
+                    <!-- Hidden input para enviar el id -->
+                    <input type="hidden" name="id" th:value="${comercial.id}" />
                     <button type="submit" class="btn btn-danger">Eliminar</button>
                     <a th:href="@{/comerciales}" class="btn btn-secondary ms-2">Cancelar</a>
                 </form>

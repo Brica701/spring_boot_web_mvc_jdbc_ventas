@@ -34,10 +34,10 @@
             <td th:text="${pedido.total}">0.0</td>
             <td>
                 <!-- Botón Editar -->
-                <a th:href="@{/pedidos/editar/{id}(id=${pedido.id})}" class="btn btn-warning btn-sm me-1">Editar</a>
+                <a th:href="@{/pedidos/editar(id=${pedido.id})}" class="btn btn-warning btn-sm me-1">Editar</a>
 
                 <!-- Botón Eliminar → abre la confirmación -->
-                <a th:href="@{/pedidos/eliminar/{id}(id=${pedido.id})}" class="btn btn-danger btn-sm">Eliminar</a>
+                <a th:href="@{/pedidos/eliminar(id=${pedido.id})}" class="btn btn-danger btn-sm">Eliminar</a>
             </td>
         </tr>
         </tbody>

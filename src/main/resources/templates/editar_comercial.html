@@ -10,7 +10,9 @@
 <div class="container mt-5">
     <h1 class="mb-4">Editar Comercial</h1>
 
-    <form th:action="@{/comerciales/editar/{id}(id=${comercial.id})}" th:object="${comercial}" method="post">
+    <form th:action="@{/comerciales/editar}" th:object="${comercial}" method="post">
+        <!-- Hidden input para enviar el id -->
+        <input type="hidden" name="id" th:value="${comercial.id}" />
 
         <div class="mb-3">
             <label for="nombre" class="form-label">Nombre</label>

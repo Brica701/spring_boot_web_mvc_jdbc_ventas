@@ -9,29 +9,37 @@
 <body>
 <div class="container mt-5">
     <h1>Crear Cliente</h1>
+
     <form th:action="@{/clientes/crear_cliente}" th:object="${cliente}" method="post">
+        <!-- Eliminado CSRF porque no usamos Spring Security -->
+
         <div class="mb-3">
             <label for="nombre" class="form-label">Nombre</label>
             <input type="text" th:field="*{nombre}" class="form-control" id="nombre" placeholder="Nombre" required>
         </div>
+
         <div class="mb-3">
             <label for="apellido1" class="form-label">Apellido 1</label>
             <input type="text" th:field="*{apellido1}" class="form-control" id="apellido1" placeholder="Apellido 1" required>
         </div>
+
         <div class="mb-3">
             <label for="apellido2" class="form-label">Apellido 2</label>
             <input type="text" th:field="*{apellido2}" class="form-control" id="apellido2" placeholder="Apellido 2">
         </div>
+
         <div class="mb-3">
             <label for="ciudad" class="form-label">Ciudad</label>
             <input type="text" th:field="*{ciudad}" class="form-control" id="ciudad" placeholder="Ciudad" required>
         </div>
+
         <div class="mb-3">
             <label for="categoria" class="form-label">Categoría</label>
             <input type="text" th:field="*{categoria}" class="form-control" id="categoria" placeholder="Categoría" required>
         </div>
+
         <button type="submit" class="btn btn-primary">Crear</button>
-        <a th:href="@{/clientes}" class="btn btn-secondary">Cancelar</a>
+        <a th:href="@{/clientes}" class="btn btn-secondary ms-2">Cancelar</a>
     </form>
 </div>
 
