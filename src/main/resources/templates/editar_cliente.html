@@ -11,37 +11,44 @@
   <h1 class="mb-4">Editar Cliente</h1>
 
   <!-- Cambiamos la acción del formulario para usar query parameter -->
-  <form th:action="@{/clientes/editar(id=${cliente.id})}" th:object="${cliente}" method="post">
+    <form th:action="@{/clientes/editar(id=${cliente.id})}" th:object="${cliente}" method="post">
 
-    <div class="mb-3">
-      <label for="nombre" class="form-label">Nombre</label>
-      <input type="text" th:field="*{nombre}" class="form-control" id="nombre" placeholder="Nombre" required>
-    </div>
+        <div class="mb-3">
+            <label for="nombre" class="form-label">Nombre</label>
+            <input type="text" th:field="*{nombre}" class="form-control" id="nombre" placeholder="Nombre" required>
+            <div class="text-danger" th:if="${#fields.hasErrors('nombre')}" th:errors="*{nombre}"></div>
+        </div>
 
-    <div class="mb-3">
-      <label for="apellido1" class="form-label">Primer Apellido</label>
-      <input type="text" th:field="*{apellido1}" class="form-control" id="apellido1" placeholder="Primer Apellido" required>
-    </div>
+        <div class="mb-3">
+            <label for="apellido1" class="form-label">Primer Apellido</label>
+            <input type="text" th:field="*{apellido1}" class="form-control" id="apellido1" placeholder="Primer Apellido" required>
+            <div class="text-danger" th:if="${#fields.hasErrors('apellido1')}" th:errors="*{apellido1}"></div>
+        </div>
 
-    <div class="mb-3">
-      <label for="apellido2" class="form-label">Segundo Apellido</label>
-      <input type="text" th:field="*{apellido2}" class="form-control" id="apellido2" placeholder="Segundo Apellido">
-    </div>
+        <div class="mb-3">
+            <label for="apellido2" class="form-label">Segundo Apellido</label>
+            <input type="text" th:field="*{apellido2}" class="form-control" id="apellido2" placeholder="Segundo Apellido">
+            <div class="text-danger" th:if="${#fields.hasErrors('apellido2')}" th:errors="*{apellido2}"></div>
+        </div>
 
-    <div class="mb-3">
-      <label for="ciudad" class="form-label">Ciudad</label>
-      <input type="text" th:field="*{ciudad}" class="form-control" id="ciudad" placeholder="Ciudad">
-    </div>
+        <div class="mb-3">
+            <label for="ciudad" class="form-label">Ciudad</label>
+            <input type="text" th:field="*{ciudad}" class="form-control" id="ciudad" placeholder="Ciudad" required>
+            <div class="text-danger" th:if="${#fields.hasErrors('ciudad')}" th:errors="*{ciudad}"></div>
+        </div>
 
-    <div class="mb-3">
-      <label for="categoria" class="form-label">Categoría</label>
-      <input type="text" th:field="*{categoria}" class="form-control" id="categoria" placeholder="Categoría">
-    </div>
+        <div class="mb-3">
+            <label for="categoria" class="form-label">Categoría</label>
+            <input type="number" th:field="*{categoria}" class="form-control" id="categoria"
+                   placeholder="Categoría" min="100" max="1000" required>
+            <div class="text-danger" th:if="${#fields.hasErrors('categoria')}" th:errors="*{categoria}"></div>
+        </div>
 
-    <button type="submit" class="btn btn-success">Guardar cambios</button>
-    <a th:href="@{/clientes}" class="btn btn-secondary ms-2">Cancelar</a>
+        <button type="submit" class="btn btn-success">Guardar cambios</button>
+        <a th:href="@{/clientes}" class="btn btn-secondary ms-2">Cancelar</a>
 
-  </form>
+    </form>
+
 </div>
 
 <!-- Bootstrap JS -->

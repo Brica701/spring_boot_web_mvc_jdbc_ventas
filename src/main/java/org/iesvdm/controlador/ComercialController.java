@@ -5,6 +5,8 @@ import org.iesvdm.service.ComercialService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import jakarta.validation.Valid;
+import org.springframework.validation.BindingResult;
 
 import java.util.List;
 
@@ -30,12 +32,17 @@ public class ComercialController {
     @GetMapping("/comerciales/crear_comercial")
     public String crearComercial(Model model) {
         model.addAttribute("comercial", new Comercial());
+        model.addAttribute("tituloForm", "Crear Comercial");
         return "crear_comercial";
     }
 
-    // Procesar formulario de creación
+    // Procesar formulario de creación con validación
     @PostMapping("/comerciales/crear_comercial")
-    public String crearComercial(@ModelAttribute("comercial") Comercial comercial) {
+    public String crearComercial(@Valid @ModelAttribute("comercial") Comercial comercial,
+                                 BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            return "crear_comercial"; // vuelve al formulario mostrando errores
+        }
         comercialService.create(comercial);
         return "redirect:/comerciales";
     }
@@ -64,15 +71,21 @@ public class ComercialController {
                 .findFirst();
         if (comercialOpt.isPresent()) {
             model.addAttribute("comercial", comercialOpt.get());
+            model.addAttribute("tituloForm", "Editar Comercial");
             return "editar_comercial";
         } else {
             return "redirect:/comerciales";
         }
     }
 
-    // Procesar formulario de edición
+    // Procesar formulario de edición con validación
     @PostMapping("/comerciales/editar")
-    public String actualizarComercial(@RequestParam("id") int id, @ModelAttribute("comercial") Comercial comercial) {
+    public String actualizarComercial(@RequestParam("id") int id,
+                                      @Valid @ModelAttribute("comercial") Comercial comercial,
+                                      BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            return "editar_comercial"; // vuelve al formulario mostrando errores
+        }
         comercial.setId(id);
         comercialService.update(comercial);
         return "redirect:/comerciales";
@@ -102,7 +115,7 @@ public class ComercialController {
         } else {
             model.addAttribute("listaComerciales", comercialService.listAll());
             model.addAttribute("error", "No se puede eliminar el comercial porque tiene pedidos asociados.");
-            return "comerciales"; // o redirigir a lista con mensaje
+            return "comerciales";
         }
         return "redirect:/comerciales";
     }

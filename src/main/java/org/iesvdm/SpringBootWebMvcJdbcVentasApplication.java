@@ -2,6 +2,8 @@ package org.iesvdm;
 
 import java.util.Optional;
 
+import org.iesvdm.dao.ClienteDAOImpl;
+import org.iesvdm.dao.ClienteDAO;
 import org.iesvdm.modelo.Cliente;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
@@ -15,7 +17,7 @@ import lombok.extern.slf4j.Slf4j;
 public class SpringBootWebMvcJdbcVentasApplication implements CommandLineRunner{
 
 	@Autowired
-	private ClienteDAO clienteDAO;
+	private ClienteDAOImpl clienteDAOImpl;
 	
 	public static void main(String[] args) {
 		SpringApplication.run(SpringBootWebMvcJdbcVentasApplication.class, args);
@@ -27,11 +29,11 @@ public class SpringBootWebMvcJdbcVentasApplication implements CommandLineRunner{
 		log.info("*******************************");
 		log.info("*Prueba de arranque ClienteDAO*");
 		log.info("*******************************");
-		
-		clienteDAO.getAll().forEach(c -> log.info("Cliente: {}", c));
+
+        clienteDAOImpl.getAll().forEach(c -> log.info("Cliente: {}", c));
 		
 		int id = 1;
-		Optional<Cliente> cliente = clienteDAO.find(id);
+		Optional<Cliente> cliente = clienteDAOImpl.find(id);
 		
 		if (cliente.isPresent()) {
 			log.info("Cliente {}: {}", id, cliente.get());
@@ -39,16 +41,16 @@ public class SpringBootWebMvcJdbcVentasApplication implements CommandLineRunner{
 			String nombreOld = cliente.get().getNombre();
 			
 			cliente.get().setNombre("Jose M");
+
+            clienteDAOImpl.update(cliente.get());
 			
-			clienteDAO.update(cliente.get());
-			
-			cliente = clienteDAO.find(id);
+			cliente = clienteDAOImpl.find(id);
 			
 			log.info("Cliente {}: {}", id, cliente.get());
 			
 			//Volvemos a cargar el nombre antiguo..
 			cliente.get().setNombre(nombreOld);
-			clienteDAO.update(cliente.get());
+            clienteDAOImpl.update(cliente.get());
 			
 		}
 		
@@ -56,16 +58,16 @@ public class SpringBootWebMvcJdbcVentasApplication implements CommandLineRunner{
 		Cliente clienteNew = new Cliente(0, "Jose M", "Martín", null, "Málaga", 100);
 		
 		//create actualiza el id
-		clienteDAO.create(clienteNew);
+        clienteDAOImpl.create(clienteNew);
 		
 		log.info("Cliente nuevo con id = {}", clienteNew.getId());
-		
-		clienteDAO.getAll().forEach(c -> log.info("Cliente: {}", c));
+
+        clienteDAOImpl.getAll().forEach(c -> log.info("Cliente: {}", c));
 		
 		//borrando por el id obtenido de create
-		clienteDAO.delete(clienteNew.getId());
-		
-		clienteDAO.getAll().forEach(c -> log.info("Cliente: {}", c));
+        clienteDAOImpl.delete(clienteNew.getId());
+
+        clienteDAOImpl.getAll().forEach(c -> log.info("Cliente: {}", c));
 		
 		log.info("************************************");
 		log.info("*FIN: Prueba de arranque ClienteDAO*");

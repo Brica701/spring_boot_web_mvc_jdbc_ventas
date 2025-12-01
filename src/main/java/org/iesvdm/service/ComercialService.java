@@ -1,8 +1,8 @@
 package org.iesvdm.service;
 
 import org.iesvdm.modelo.Comercial;
-import org.iesvdm.repository.ComercialRepository;
-import org.iesvdm.repository.PedidoRepository;
+import org.iesvdm.dao.ComercialDAOImpl;
+import org.iesvdm.dao.PedidoDAOImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -13,38 +13,38 @@ import java.util.Optional;
 public class ComercialService {
 
     @Autowired
-    private ComercialRepository comercialrepository;
+    private ComercialDAOImpl comercialDAOImpl;
     @Autowired
-    private PedidoRepository pedidorepository;
+    private PedidoDAOImpl pedidoDAOImpl;
 
     // Inyección automática por constructor (como en ClienteService)
-    public ComercialService(ComercialRepository comercialrepository) {
-        this.comercialrepository = comercialrepository;
+    public ComercialService(ComercialDAOImpl comercialrepository) {
+        this.comercialDAOImpl = comercialrepository;
     }
 
     public List<Comercial> listAll() {
-        return comercialrepository.getAll();
+        return comercialDAOImpl.getAll();
     }
 
     public Optional<Comercial> find(int id) {
-        return comercialrepository.find(id);
+        return comercialDAOImpl.find(id);
     }
 
     public void create(Comercial comercial) {
-        comercialrepository.create(comercial);
+        comercialDAOImpl.create(comercial);
     }
 
     public void update(Comercial comercial) {
-        comercialrepository.update(comercial);
+        comercialDAOImpl.update(comercial);
     }
 
     public void delete(long id) {
-        comercialrepository.delete(id);
+        comercialDAOImpl.delete(id);
     }
 
     // Nuevo método: verifica si se puede borrar el comercial
     public boolean canDelete(long comercialId) {
-        return pedidorepository.getAll().stream()
+        return pedidoDAOImpl.getAll().stream()
                 .noneMatch(p -> p.getIdComercial() == comercialId);
     }
 }

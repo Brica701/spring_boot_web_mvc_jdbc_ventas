@@ -1,4 +1,4 @@
-package org.iesvdm.repository;
+package org.iesvdm.dao;
 
 import java.sql.PreparedStatement;
 import java.util.List;
@@ -15,7 +15,7 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @Repository
-public class ClienteRepository {
+public class ClienteDAOImpl implements ClienteDAO {
 
     @Autowired
     private JdbcTemplate jdbcTemplate;

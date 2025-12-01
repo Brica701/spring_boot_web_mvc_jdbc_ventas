@@ -1,4 +1,4 @@
-package org.iesvdm.repository;
+package org.iesvdm.dao;
 
 import java.util.List;
 import java.util.Optional;
@@ -15,7 +15,7 @@ import lombok.extern.slf4j.Slf4j;
 @Repository
 //Utilizo lombok para generar el constructor
 @AllArgsConstructor
-public class ComercialRepository {
+public class ComercialDAOImpl implements ComercialDAO {
 
 	//JdbcTemplate se inyecta por el constructor de la clase automáticamente
 	//
