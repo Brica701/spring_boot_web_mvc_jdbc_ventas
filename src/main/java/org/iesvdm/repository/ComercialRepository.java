@@ -41,7 +41,7 @@ public class ComercialRepository {
                 							  rs.getString("nombre"), 
                 							  rs.getString("apellido1"),
                 							  rs.getString("apellido2"), 
-                							  rs.getFloat("comision"))
+                							  rs.getBigDecimal("comision"))
                 						 	
         );
 		
@@ -58,7 +58,7 @@ public class ComercialRepository {
                         rs.getString("nombre"),
                         rs.getString("apellido1"),
                         rs.getString("apellido2"),
-                        rs.getFloat("comision")
+                        rs.getBigDecimal("comision")
                 ),
                 id
         );

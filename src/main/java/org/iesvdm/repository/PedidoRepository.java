@@ -16,7 +16,7 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @Repository
-public class PedidoRepository implements PedidoDAO {
+public class PedidoRepository {
 
     @Autowired
     private JdbcTemplate jdbcTemplate;
@@ -24,7 +24,6 @@ public class PedidoRepository implements PedidoDAO {
     /**
      * Inserta en base de datos el nuevo Pedido, actualizando el id en el bean Pedido.
      */
-    @Override
     public synchronized void create(Pedido pedido) {
         String sqlInsert = """
                 INSERT INTO pedido (id_cliente, id_comercial, fecha, total)
@@ -51,7 +50,6 @@ public class PedidoRepository implements PedidoDAO {
     /**
      * Devuelve lista con todos los Pedidos.
      */
-    @Override
     public List<Pedido> getAll() {
         List<Pedido> list = jdbcTemplate.query(
                 "SELECT * FROM pedido",
@@ -71,7 +69,6 @@ public class PedidoRepository implements PedidoDAO {
     /**
      * Devuelve Optional de Pedido con el ID dado.
      */
-    @Override
     public Optional<Pedido> find(int id) {
         try {
             Pedido pedido = jdbcTemplate.queryForObject(
@@ -95,7 +92,6 @@ public class PedidoRepository implements PedidoDAO {
     /**
      * Actualiza Pedido con campos del bean Pedido según ID del mismo.
      */
-    @Override
     public void update(Pedido pedido) {
         int rows = jdbcTemplate.update("""
                 UPDATE pedido SET 
@@ -118,7 +114,6 @@ public class PedidoRepository implements PedidoDAO {
     /**
      * Borra Pedido con ID proporcionado.
      */
-    @Override
     public void delete(long id) {
         int rows = jdbcTemplate.update("DELETE FROM pedido WHERE id = ?", id);
         log.info("Delete de Pedido con {} registros eliminados.", rows);
