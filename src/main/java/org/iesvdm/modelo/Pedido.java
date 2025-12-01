@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
+import java.sql.Date;
 
 @Data
 @AllArgsConstructor
@@ -13,9 +14,9 @@ import java.time.LocalDate;
 @Builder
 public class Pedido {
     private int id;
-    private int idCliente;
-    private int idComercial;
-    private LocalDate fecha;
-    private float total;
+    private double total;
+    private Date fecha;
+    private int id_cliente;
+    private int id_comercial;
 
 }

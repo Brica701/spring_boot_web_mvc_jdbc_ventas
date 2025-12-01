@@ -8,9 +8,9 @@
 </head>
 <body>
 <div class="container mt-5">
-    <h1>Crear Comercial</h1>
+    <h1 class="mb-4">Crear Comercial</h1>
 
-    <form th:action="@{/comerciales/crear_comercial}" th:object="${comercial}" method="post">
+    <form th:action="@{/comerciales/crear}" th:object="${comercial}" method="post">
         <div class="mb-3">
             <label for="nombre" class="form-label">Nombre</label>
             <input type="text" th:field="*{nombre}" class="form-control" id="nombre" placeholder="Nombre" required>
@@ -18,26 +18,27 @@
         </div>
 
         <div class="mb-3">
-            <label for="apellido1" class="form-label">Apellido 1</label>
-            <input type="text" th:field="*{apellido1}" class="form-control" id="apellido1" placeholder="Apellido 1" required>
+            <label for="apellido1" class="form-label">Primer Apellido</label>
+            <input type="text" th:field="*{apellido1}" class="form-control" id="apellido1" placeholder="Primer Apellido" required>
             <div class="text-danger" th:if="${#fields.hasErrors('apellido1')}" th:errors="*{apellido1}"></div>
         </div>
 
         <div class="mb-3">
-            <label for="apellido2" class="form-label">Apellido 2</label>
-            <input type="text" th:field="*{apellido2}" class="form-control" id="apellido2" placeholder="Apellido 2">
+            <label for="apellido2" class="form-label">Segundo Apellido</label>
+            <input type="text" th:field="*{apellido2}" class="form-control" id="apellido2" placeholder="Segundo Apellido">
             <div class="text-danger" th:if="${#fields.hasErrors('apellido2')}" th:errors="*{apellido2}"></div>
         </div>
 
         <div class="mb-3">
             <label for="comision" class="form-label">Comisión</label>
             <input type="number" th:field="*{comision}" class="form-control" id="comision"
-                   placeholder="Comisión" step="0.001" min="0.276" max="0.946" required>
+                   placeholder="Comisión" step="0.001" min="0" max="1" required>
             <div class="text-danger" th:if="${#fields.hasErrors('comision')}" th:errors="*{comision}"></div>
+            <div class="form-text">Introduce un valor entre 0 y 1. Ejemplo: 0.15</div>
         </div>
 
         <button type="submit" class="btn btn-primary">Crear</button>
-        <a th:href="@{/comerciales}" class="btn btn-secondary">Cancelar</a>
+        <a th:href="@{/comerciales}" class="btn btn-secondary ms-2">Cancelar</a>
     </form>
 
 </div>

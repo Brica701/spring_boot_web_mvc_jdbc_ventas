@@ -1,9 +1,6 @@
 package org.iesvdm.modelo;
 
-import jakarta.validation.constraints.Max;
-import jakarta.validation.constraints.Min;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Size;
+import jakarta.validation.constraints.*;
 import lombok.*;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnNotWebApplication;
 
@@ -17,7 +14,7 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnNotWebAppli
 @Builder
 public class Cliente {
 
-    private long id;
+    private int id;
 
     @NotBlank(message = "El nombre es obligatorio")
     @Size(max = 30, message = "El nombre no puede superar los 30 caracteres")
@@ -37,5 +34,8 @@ public class Cliente {
     @Min(value = 100, message = "La categoría mínima es 100")
     @Max(value = 1000, message = "La categoría máxima es 1000")
     private int categoria;
-	
+
+    @NotBlank(message = "{msg.client.emailBlank}")
+    @Email(message = "Formato de email incorrecto", regexp="^[a-zA-Z0-9._-]+@[a-zA-Z0-9-]+\\.[a-zA-Z.]{2,5}")
+    private String email;
 }

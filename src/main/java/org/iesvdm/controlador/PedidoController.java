@@ -1,82 +1,74 @@
 package org.iesvdm.controlador;
 
-import java.util.List;
-
+import org.iesvdm.dao.PedidoDAO;
 import org.iesvdm.modelo.Pedido;
 import org.iesvdm.service.PedidoService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.view.RedirectView;
+
+import java.util.List;
 
 @Controller
 public class PedidoController {
 
-    private final PedidoService pedidoService;
+    @Autowired
+    private PedidoService pedidoService;
 
-    // Inyección automática por constructor
-    public PedidoController(PedidoService pedidoService) {
-        this.pedidoService = pedidoService;
-    }
+    @Autowired
+    private PedidoDAO pedidoDAO;
 
-    // Listar todos los pedidos
+    // LISTAR
     @GetMapping("/pedidos")
-    public String listarPedidos(Model model) {
-        List<Pedido> listaPedidos = pedidoService.getAll();
+    public String listar(Model model) {
+        List<Pedido> listaPedidos = pedidoService.listAll();
         model.addAttribute("listaPedidos", listaPedidos);
         return "pedidos";
     }
 
-    // Mostrar formulario para crear pedido
-    @GetMapping("/pedidos/crear_pedido")
-    public String mostrarFormulario(Model model) {
+    // CREAR
+    @GetMapping("/pedidos/crear")
+    public String crear(Model model) {
         model.addAttribute("pedido", new Pedido());
-        return "crear_pedido";
+        return "crear-pedido";
     }
 
-    // Procesar formulario de creación
-    @PostMapping("/pedidos/crear_pedido")
-    public String crearPedido(@ModelAttribute("pedido") Pedido pedido) {
+    @PostMapping("/pedidos/crear")
+    public String submitCrear(@ModelAttribute("pedido") Pedido pedido) {
         pedidoService.create(pedido);
         return "redirect:/pedidos";
     }
 
-    // Mostrar formulario de edición
-    @GetMapping("/pedidos/editar")
-    public String mostrarFormularioEdicion(@RequestParam("id") int id, Model model) {
-        var pedidoOpt = pedidoService.find(id);
-        if (pedidoOpt.isPresent()) {
-            model.addAttribute("pedido", pedidoOpt.get());
-            return "editar_pedido";
-        } else {
-            return "redirect:/pedidos";
-        }
+    // DETALLE
+    @GetMapping("/pedidos/{id}")
+    public String detalle(@PathVariable int id, Model model) {
+        Pedido pedido = pedidoService.find(id).orElse(null);
+        model.addAttribute("pedido", pedido);
+        return "detalle-pedido";
     }
 
-    // Procesar formulario de edición
-    @PostMapping("/pedidos/editar")
-    public String actualizarPedido(@RequestParam("id") int id, @ModelAttribute("pedido") Pedido pedido) {
+    // EDITAR
+    @GetMapping("/pedidos/editar/{id}")
+    public String editar(@PathVariable int id, Model model) {
+        Pedido pedido = pedidoService.find(id).orElse(null);
+        model.addAttribute("pedido", pedido);
+        return "editar-pedido";
+    }
+
+    @PostMapping("/pedidos/editar/{id}")
+    public RedirectView editarSubmit(@PathVariable int id, @ModelAttribute("pedido") Pedido pedido) {
         pedido.setId(id);
         pedidoService.update(pedido);
-        return "redirect:/pedidos";
+        return new RedirectView("/pedidos");
     }
 
-    // Mostrar confirmación de eliminación
-    @GetMapping("/pedidos/eliminar")
-    public String mostrarConfirmacionEliminar(@RequestParam("id") int id, Model model) {
-        var pedidoOpt = pedidoService.find(id);
-        if (pedidoOpt.isPresent()) {
-            model.addAttribute("pedido", pedidoOpt.get());
-            return "eliminar_pedido";
-        } else {
-            return "redirect:/pedidos";
-        }
-    }
-
-    // Procesar eliminación
-    @PostMapping("/pedidos/eliminar")
-    public String eliminarPedido(@RequestParam("id") int id) {
+    // BORRAR
+    @PostMapping("/pedidos/borrar/{id}")
+    public RedirectView borrar(@PathVariable int id) {
         pedidoService.delete(id);
-        return "redirect:/pedidos";
+        return new RedirectView("/pedidos");
     }
 
 }

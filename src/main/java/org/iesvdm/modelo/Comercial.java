@@ -19,18 +19,18 @@ public class Comercial {
 
     private int id;
 
-    @NotBlank(message = "El nombre es obligatorio")
-    @Size(max = 30, message = "El nombre no puede superar los 30 caracteres")
+    @NotBlank(message = "{msg.customer.nameBlank}")
+    @Size(max = 30, message = "{msg.customer.nameMax}")
     private String nombre;
 
-    @NotBlank(message = "El primer apellido es obligatorio")
-    @Size(max = 30, message = "El primer apellido no puede superar los 30 caracteres")
+    @NotBlank(message = "{msg.customer.surname1Blank}")
+    @Size(max = 30, message = "{msg.customer.surname1Max}")
     private String apellido1;
 
-    // Apellido2 es opcional
+    // Opcional
     private String apellido2;
 
-    @DecimalMin(value = "0.276", inclusive = true, message = "La comisión mínima es 0.276")
-    @DecimalMax(value = "0.946", inclusive = true, message = "La comisión máxima es 0.946")
+    @DecimalMin(value = "0.276", message = "{msg.customer.comisionMin}")
+    @DecimalMax(value = "0.946", message = "{msg.customer.comisionMax}")
     private BigDecimal comision;
 }

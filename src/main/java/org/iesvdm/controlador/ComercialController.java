@@ -1,122 +1,108 @@
 package org.iesvdm.controlador;
 
 import org.iesvdm.modelo.Comercial;
+import org.iesvdm.modelo.Cliente;
+import org.iesvdm.modelo.Pedido;
 import org.iesvdm.service.ComercialService;
+import org.iesvdm.service.ClienteService;
+import org.iesvdm.dao.PedidoDAO;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import jakarta.validation.Valid;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.servlet.view.RedirectView;
 
+import java.util.Comparator;
 import java.util.List;
 
 @Controller
 public class ComercialController {
 
-    private final ComercialService comercialService;
+    @Autowired
+    private ComercialService comercialService;
 
-    // Inyección automática por constructor
-    public ComercialController(ComercialService comercialService) {
-        this.comercialService = comercialService;
-    }
+    @Autowired
+    private ClienteService clienteService;
 
-    // Listar todos los comerciales
+    @Autowired
+    private PedidoDAO pedidoDAO;
+
+    // LISTAR
     @GetMapping("/comerciales")
     public String listar(Model model) {
         List<Comercial> listaComerciales = comercialService.listAll();
         model.addAttribute("listaComerciales", listaComerciales);
-        return "comerciales";  // nombre de la vista Thymeleaf
+        return "comerciales";
     }
 
-    // Mostrar formulario para crear comercial
-    @GetMapping("/comerciales/crear_comercial")
-    public String crearComercial(Model model) {
-        model.addAttribute("comercial", new Comercial());
-        model.addAttribute("tituloForm", "Crear Comercial");
-        return "crear_comercial";
+    // CREAR
+    @GetMapping("/comerciales/crear")
+    public String crear(Model model) {
+        Comercial comercial = new Comercial();
+        model.addAttribute("comercial", comercial);
+        return "crear-comercial";
     }
 
-    // Procesar formulario de creación con validación
-    @PostMapping("/comerciales/crear_comercial")
-    public String crearComercial(@Valid @ModelAttribute("comercial") Comercial comercial,
-                                 BindingResult bindingResult) {
+    @PostMapping("/comerciales/crear")
+    public String submitCrear(@Valid @ModelAttribute("comercial") Comercial comercial,
+                              BindingResult bindingResult, Model model) {
         if (bindingResult.hasErrors()) {
-            return "crear_comercial"; // vuelve al formulario mostrando errores
+            model.addAttribute("comercial", comercial);
+            return "crear-comercial";
         }
-        comercialService.create(comercial);
+        comercialService.newComercial(comercial);
         return "redirect:/comerciales";
     }
 
-    // Ver detalle de un comercial
-    @GetMapping("/comerciales/ver")
-    public String verDetalleComercial(@RequestParam("id") long id, Model model) {
-        var comercialOpt = comercialService.listAll()
-                .stream()
-                .filter(c -> c.getId() == id)
-                .findFirst();
-        if (comercialOpt.isPresent()) {
-            model.addAttribute("comercial", comercialOpt.get());
-            return "ver_comercial";
-        } else {
-            return "redirect:/comerciales";
-        }
+    // DETALLE
+    @GetMapping("/comerciales/{id}")
+    public String detalle(@PathVariable Integer id, Model model) {
+        Comercial comercial = comercialService.one(id);
+        model.addAttribute("comercial", comercial);
+
+        // Lista de pedidos asociados al comercial
+        List<Pedido> listaPedidos = pedidoDAO.filterByComercialId(id);
+        model.addAttribute("listaPedidos", listaPedidos);
+
+        // Cliente relacionado (si aplica)
+        Cliente cliente = clienteService.one(id);
+        model.addAttribute("cliente", cliente);
+
+        // Pedido máximo y mínimo por total
+        Pedido maxPedido = listaPedidos.stream()
+                .max(Comparator.comparingDouble(Pedido::getTotal))
+                .orElse(null);
+        model.addAttribute("maxPedido", maxPedido);
+
+        Pedido minPedido = listaPedidos.stream()
+                .min(Comparator.comparingDouble(Pedido::getTotal))
+                .orElse(null);
+        model.addAttribute("minPedido", minPedido);
+
+        return "detalle-comercial";
     }
 
-    // Mostrar formulario de edición
-    @GetMapping("/comerciales/editar")
-    public String mostrarFormularioEdicion(@RequestParam("id") long id, Model model) {
-        var comercialOpt = comercialService.listAll()
-                .stream()
-                .filter(c -> c.getId() == id)
-                .findFirst();
-        if (comercialOpt.isPresent()) {
-            model.addAttribute("comercial", comercialOpt.get());
-            model.addAttribute("tituloForm", "Editar Comercial");
-            return "editar_comercial";
-        } else {
-            return "redirect:/comerciales";
-        }
+    // EDITAR
+    @GetMapping("/comerciales/editar/{id}")
+    public String editar(Model model, @PathVariable Integer id) {
+        Comercial comercial = comercialService.one(id);
+        model.addAttribute("comercial", comercial);
+        return "editar-comercial";
     }
 
-    // Procesar formulario de edición con validación
-    @PostMapping("/comerciales/editar")
-    public String actualizarComercial(@RequestParam("id") int id,
-                                      @Valid @ModelAttribute("comercial") Comercial comercial,
-                                      BindingResult bindingResult) {
-        if (bindingResult.hasErrors()) {
-            return "editar_comercial"; // vuelve al formulario mostrando errores
-        }
-        comercial.setId(id);
-        comercialService.update(comercial);
-        return "redirect:/comerciales";
+    @PostMapping("/comerciales/editar/{id}")
+    public RedirectView editarSubmit(@ModelAttribute("comercial") Comercial comercial) {
+        comercialService.replaceComercial(comercial);
+        return new RedirectView("/comerciales");
     }
 
-    // Mostrar confirmación de eliminación
-    @GetMapping("/comerciales/eliminar")
-    public String mostrarConfirmacionEliminarComercial(@RequestParam("id") long id, Model model) {
-        var comercialOpt = comercialService.listAll()
-                .stream()
-                .filter(c -> c.getId() == id)
-                .findFirst();
-        if (comercialOpt.isPresent()) {
-            model.addAttribute("comercial", comercialOpt.get());
-            model.addAttribute("comercialPuedeEliminarse", comercialService.canDelete(id));
-            return "eliminar_comercial";
-        } else {
-            return "redirect:/comerciales";
-        }
+    // BORRAR
+    @PostMapping("/comerciales/borrar/{id}")
+    public RedirectView submitBorrar(@PathVariable Integer id) {
+        comercialService.deleteComercial(id);
+        return new RedirectView("/comerciales");
     }
 
-    // Procesar eliminación
-    @PostMapping("/comerciales/eliminar")
-    public String eliminarComercial(@RequestParam("id") long id, Model model) {
-        if (comercialService.canDelete(id)) {
-            comercialService.delete(id);
-        } else {
-            model.addAttribute("listaComerciales", comercialService.listAll());
-            model.addAttribute("error", "No se puede eliminar el comercial porque tiene pedidos asociados.");
-            return "comerciales";
-        }
-        return "redirect:/comerciales";
-    }
 }

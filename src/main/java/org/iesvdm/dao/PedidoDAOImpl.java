@@ -21,24 +21,21 @@ public class PedidoDAOImpl implements PedidoDAO {
     @Autowired
     private JdbcTemplate jdbcTemplate;
 
-    /**
-     * Inserta en base de datos el nuevo Pedido, actualizando el id en el bean Pedido.
-     */
-    public synchronized void create(Pedido pedido) {
+
+    @Override
+    public void create(Pedido pedido) {
         String sqlInsert = """
-                INSERT INTO pedido (id_cliente, id_comercial, fecha, total)
-                VALUES (?, ?, ?, ?)
-                """;
+                INSERT INTO pedido (total, fecha, id_cliente, id_comercial)
+                VALUES (?,?,?,?) """;
 
         KeyHolder keyHolder = new GeneratedKeyHolder();
-
         int rows = jdbcTemplate.update(connection -> {
             PreparedStatement ps = connection.prepareStatement(sqlInsert, new String[]{"id"});
             int idx = 1;
-            ps.setInt(idx++, pedido.getIdCliente());
-            ps.setInt(idx++, pedido.getIdComercial());
-            ps.setDate(idx++, Date.valueOf(pedido.getFecha()));
-            ps.setFloat(idx, pedido.getTotal());
+            ps.setDouble(idx++, pedido.getTotal());
+            ps.setDate(idx++, pedido.getFecha());
+            ps.setInt(idx++, pedido.getId_cliente());
+            ps.setInt(idx, pedido.getId_comercial());
             return ps;
         }, keyHolder);
 
@@ -47,75 +44,115 @@ public class PedidoDAOImpl implements PedidoDAO {
         log.info("Insertados {} registros.", rows);
     }
 
-    /**
-     * Devuelve lista con todos los Pedidos.
-     */
+    @Override
     public List<Pedido> getAll() {
-        List<Pedido> list = jdbcTemplate.query(
+
+        List<Pedido> listPedido = jdbcTemplate.query(
                 "SELECT * FROM pedido",
                 (rs, rowNum) -> new Pedido(
                         rs.getInt("id"),
+                        rs.getDouble("total"),
+                        rs.getDate("fecha"),
                         rs.getInt("id_cliente"),
-                        rs.getInt("id_comercial"),
-                        rs.getDate("fecha").toLocalDate(),
-                        rs.getFloat("total")
-                )
+                        rs.getInt("id_comercial"))
+
         );
 
-        log.info("Devueltos {} registros.", list.size());
-        return list;
+        log.info("Devueltos {} registros.", listPedido.size());
+
+        return listPedido;
+
+
     }
 
-    /**
-     * Devuelve Optional de Pedido con el ID dado.
-     */
+    @Override
     public Optional<Pedido> find(int id) {
-        try {
-            Pedido pedido = jdbcTemplate.queryForObject(
-                    "SELECT * FROM pedido WHERE id = ?",
-                    (rs, rowNum) -> new Pedido(
-                            rs.getInt("id"),
-                            rs.getInt("id_cliente"),
-                            rs.getInt("id_comercial"),
-                            rs.getDate("fecha").toLocalDate(),
-                            rs.getFloat("total")
-                    ),
-                    id
-            );
-            return Optional.ofNullable(pedido);
-        } catch (Exception e) {
+
+        Pedido pedido = jdbcTemplate
+                .queryForObject("SELECT * FROM pedido WHERE id = ?"
+                        , (rs, rowNum) ->
+
+                                new Pedido(rs.getInt("id"),
+                                        rs.getDouble("total"),
+                                        rs.getDate("fecha"),
+                                        rs.getInt("id_cliente"),
+                                        rs.getInt("id_comercial"))
+                        , id
+                );
+
+        if (pedido != null) {
+            return Optional.of(pedido);
+        } else {
             log.info("Pedido no encontrado.");
             return Optional.empty();
         }
+
     }
 
-    /**
-     * Actualiza Pedido con campos del bean Pedido según ID del mismo.
-     */
+    @Override
     public void update(Pedido pedido) {
+
         int rows = jdbcTemplate.update("""
-                UPDATE pedido SET 
-                    id_cliente = ?, 
-                    id_comercial = ?, 
-                    fecha = ?, 
-                    total = ? 
-                WHERE id = ?
-                """,
-                pedido.getIdCliente(),
-                pedido.getIdComercial(),
-                Date.valueOf(pedido.getFecha()),
-                pedido.getTotal(),
-                pedido.getId()
-        );
+										UPDATE pedido SET 
+														total = ?, 
+														fecha = ?, 
+														id_cliente = ?,
+														id_comercial = ?,  
+												WHERE id = ?
+										""", pedido.getTotal()
+                , pedido.getFecha()
+                , pedido.getId_cliente()
+                ,pedido.getId_comercial()
+                , pedido.getId());
 
         log.info("Update de Pedido con {} registros actualizados.", rows);
+
     }
 
-    /**
-     * Borra Pedido con ID proporcionado.
-     */
-    public void delete(long id) {
+    @Override
+    public void delete(int id) {
+
         int rows = jdbcTemplate.update("DELETE FROM pedido WHERE id = ?", id);
+
         log.info("Delete de Pedido con {} registros eliminados.", rows);
     }
+
+    @Override
+    public List<Pedido> filterByClienteId(int id) {
+
+        List<Pedido> lista = jdbcTemplate.query(
+                "SELECT * FROM pedido WHERE id_cliente = ?",
+                (rs, rowNum) -> new Pedido(
+                        rs.getInt("id"),
+                        rs.getDouble("total"),
+                        rs.getDate("fecha"),
+                        rs.getInt("id_cliente"),
+                        rs.getInt("id_comercial")
+                ), id
+
+        );
+
+        return lista;
+    }
+
+    @Override
+    public List<Pedido> filterByComercialId(int id) {
+
+        List<Pedido> lista = jdbcTemplate.query(
+                "SELECT * FROM pedido WHERE id_comercial = ?",
+
+                (rs, rowNum) -> new Pedido(
+                        rs.getInt("id"),
+                        rs.getDouble("total"),
+                        rs.getDate("fecha"),
+                        rs.getInt("id_cliente"),
+                        rs.getInt("id_comercial")
+                ), id
+
+        );
+
+        return lista;
+    }
+
+
 }

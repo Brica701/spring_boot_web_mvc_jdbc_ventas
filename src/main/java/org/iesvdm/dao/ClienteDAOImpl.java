@@ -6,7 +6,9 @@ import java.util.Optional;
 
 import org.iesvdm.modelo.Cliente;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.simple.JdbcClient;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
@@ -17,18 +19,24 @@ import lombok.extern.slf4j.Slf4j;
 @Repository
 public class ClienteDAOImpl implements ClienteDAO {
 
+
     @Autowired
     private JdbcTemplate jdbcTemplate;
+    @Autowired
+    private JdbcClient jdbcClient;
 
+    /**
+     * Inserta en base de datos el nuevo Cliente, actualizando el id en el bean Cliente.
+     */
+    @Override
     public synchronized void create(Cliente cliente) {
 
         String sqlInsert = """
-                INSERT INTO cliente (nombre, apellido1, apellido2, ciudad, categoria) 
-                VALUES (?, ?, ?, ?, ?)
+                INSERT INTO cliente (nombre, apellido1, apellido2, ciudad, categoria, email) 
+                VALUES  (?,?,?,?,?,?)
                 """;
 
         KeyHolder keyHolder = new GeneratedKeyHolder();
-
         int rows = jdbcTemplate.update(connection -> {
             PreparedStatement ps = connection.prepareStatement(sqlInsert, new String[]{"id"});
             int idx = 1;
@@ -36,73 +44,106 @@ public class ClienteDAOImpl implements ClienteDAO {
             ps.setString(idx++, cliente.getApellido1());
             ps.setString(idx++, cliente.getApellido2());
             ps.setString(idx++, cliente.getCiudad());
-            ps.setInt(idx, cliente.getCategoria());
+            ps.setInt(idx++, cliente.getCategoria());
+            ps.setString(idx, cliente.getEmail());
             return ps;
         }, keyHolder);
 
         cliente.setId(keyHolder.getKey().intValue());
 
         log.info("Insertados {} registros.", rows);
+
     }
 
+    /**
+     * Devuelve lista con todos los Clientes.
+     */
+    @Override
     public List<Cliente> getAll() {
+
         List<Cliente> listFab = jdbcTemplate.query(
                 "SELECT * FROM cliente",
-                (rs, rowNum) -> new Cliente(
-                        rs.getInt("id"),
+                (rs, rowNum) -> new Cliente(rs.getInt("id"),
                         rs.getString("nombre"),
                         rs.getString("apellido1"),
                         rs.getString("apellido2"),
                         rs.getString("ciudad"),
-                        rs.getInt("categoria")
+                        rs.getInt("categoria"),
+                        rs.getString("email")
                 )
         );
 
         log.info("Devueltos {} registros.", listFab.size());
+
         return listFab;
+
     }
 
+    /**
+     * Devuelve Optional de Cliente con el ID dado.
+     */
+    @Override
     public Optional<Cliente> find(int id) {
-
-        Cliente fab = jdbcTemplate.queryForObject(
-                "SELECT * FROM cliente WHERE id = ?",
-                (rs, rowNum) -> new Cliente(
-                        rs.getInt("id"),
-                        rs.getString("nombre"),
-                        rs.getString("apellido1"),
-                        rs.getString("apellido2"),
-                        rs.getString("ciudad"),
-                        rs.getInt("categoria")
-                ),
-                id
-        );
-
-        return fab != null ? Optional.of(fab) : Optional.empty();
+        try {
+            Cliente cliente = jdbcTemplate.queryForObject(
+                    "SELECT * FROM cliente WHERE id = ?",
+                    (rs, rowNum) -> new Cliente(
+                            rs.getInt("id"),
+                            rs.getString("nombre"),
+                            rs.getString("apellido1"),
+                            rs.getString("apellido2"),
+                            rs.getString("ciudad"),
+                            rs.getInt("categoria"),
+                            rs.getString("email")
+                    ),
+                    id
+            );
+            return Optional.of(cliente);
+        } catch (EmptyResultDataAccessException e) {
+            log.info("Cliente no encontrado con ID " + id);
+            return Optional.empty();
+        }
     }
 
+    /**
+     * Actualiza cliente ID.
+     */
+    @Override
     public void update(Cliente cliente) {
+
         int rows = jdbcTemplate.update("""
                         UPDATE cliente SET 
-                            nombre = ?, 
-                            apellido1 = ?, 
-                            apellido2 = ?,
-                            ciudad = ?,
-                            categoria = ?  
-                        WHERE id = ?
-                        """,
-                cliente.getNombre(),
-                cliente.getApellido1(),
-                cliente.getApellido2(),
-                cliente.getCiudad(),
-                cliente.getCategoria(),
-                cliente.getId()
-        );
+                        				nombre = ?, 
+                        				apellido1 = ?, 
+                        				apellido2 = ?,
+                        				ciudad = ?,
+                        				categoria = ?, 
+               							email = ?
+                        		WHERE id = ?
+                        """
+                , cliente.getNombre()
+                , cliente.getApellido1()
+                , cliente.getApellido2()
+                , cliente.getCiudad()
+                , cliente.getCategoria()
+                , cliente.getEmail()
+                , cliente.getId());
 
         log.info("Update de Cliente con {} registros actualizados.", rows);
+
     }
 
-    public void delete(long id) {
+    /**
+     * Borra cliente con ID proporcionado.
+     */
+    @Override
+    public void delete(int id) {
+
+        int rowsPedido = jdbcTemplate.update("DELETE FROM pedido WHERE id_cliente = ?", id);
         int rows = jdbcTemplate.update("DELETE FROM cliente WHERE id = ?", id);
+
         log.info("Delete de Cliente con {} registros eliminados.", rows);
+
     }
+
 }

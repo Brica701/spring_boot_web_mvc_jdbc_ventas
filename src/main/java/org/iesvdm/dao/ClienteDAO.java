@@ -8,12 +8,8 @@ import java.util.Optional;
 public interface ClienteDAO {
 
     void create(Cliente cliente);
-
     List<Cliente> getAll();
-
-    Optional<Cliente> find(int id);
-
+    Optional<Cliente>  find(int id);
     void update(Cliente cliente);
-
-    void delete(long id);
+    void delete(int id);
 }

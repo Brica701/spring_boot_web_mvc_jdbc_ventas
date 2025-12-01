@@ -1,8 +1,7 @@
 package org.iesvdm.service;
 
 import org.iesvdm.modelo.Comercial;
-import org.iesvdm.dao.ComercialDAOImpl;
-import org.iesvdm.dao.PedidoDAOImpl;
+import org.iesvdm.dao.ComercialDAO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -13,38 +12,32 @@ import java.util.Optional;
 public class ComercialService {
 
     @Autowired
-    private ComercialDAOImpl comercialDAOImpl;
-    @Autowired
-    private PedidoDAOImpl pedidoDAOImpl;
+    private ComercialDAO comercialDAO;
 
-    // Inyección automática por constructor (como en ClienteService)
-    public ComercialService(ComercialDAOImpl comercialrepository) {
-        this.comercialDAOImpl = comercialrepository;
-    }
-
+    // Listar todos los comerciales
     public List<Comercial> listAll() {
-        return comercialDAOImpl.getAll();
+        return comercialDAO.getAll();
     }
 
-    public Optional<Comercial> find(int id) {
-        return comercialDAOImpl.find(id);
+    // Obtener un comercial por ID
+    public Comercial one(Integer id) {
+        Optional<Comercial> optCom = comercialDAO.find(id);
+        return optCom.orElse(null);
     }
 
-    public void create(Comercial comercial) {
-        comercialDAOImpl.create(comercial);
+    // Crear un comercial nuevo
+    public void newComercial(Comercial comercial) {
+        comercialDAO.create(comercial);
     }
 
-    public void update(Comercial comercial) {
-        comercialDAOImpl.update(comercial);
+    // Actualizar un comercial
+    public void replaceComercial(Comercial comercial) {
+        comercialDAO.update(comercial);
     }
 
-    public void delete(long id) {
-        comercialDAOImpl.delete(id);
+    // Borrar un comercial
+    public void deleteComercial(int id) {
+        comercialDAO.delete(id);
     }
 
-    // Nuevo método: verifica si se puede borrar el comercial
-    public boolean canDelete(long comercialId) {
-        return pedidoDAOImpl.getAll().stream()
-                .noneMatch(p -> p.getIdComercial() == comercialId);
-    }
 }

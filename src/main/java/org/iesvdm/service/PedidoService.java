@@ -1,7 +1,7 @@
 package org.iesvdm.service;
 
+import org.iesvdm.dao.PedidoDAO;
 import org.iesvdm.modelo.Pedido;
-import org.iesvdm.dao.PedidoDAOImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -12,31 +12,40 @@ import java.util.Optional;
 public class PedidoService {
 
     @Autowired
-    private PedidoDAOImpl pedidoDAOImpl;
+    private PedidoDAO pedidoDAO;
 
-    // Crear un pedido
+    // LISTAR TODOS
+    public List<Pedido> listAll() {
+        return pedidoDAO.getAll();
+    }
+
+    // CREAR
     public void create(Pedido pedido) {
-        pedidoDAOImpl.create(pedido);
+        pedidoDAO.create(pedido);
     }
 
-    // Obtener todos los pedidos
-    public List<Pedido> getAll() {
-        return pedidoDAOImpl.getAll();
-    }
-
-    // Buscar un pedido por ID
+    // BUSCAR POR ID
     public Optional<Pedido> find(int id) {
-        return pedidoDAOImpl.find(id);
+        return pedidoDAO.find(id);
     }
 
-    // Actualizar un pedido
+    // ACTUALIZAR
     public void update(Pedido pedido) {
-        pedidoDAOImpl.update(pedido);
+        pedidoDAO.update(pedido);
     }
 
-    // Eliminar un pedido por ID
-    public void delete(long id) {
-        pedidoDAOImpl.delete(id);
+    // BORRAR
+    public void delete(int id) {
+        pedidoDAO.delete(id);
+    }
+
+    // FILTRAR POR CLIENTE
+    public List<Pedido> filterByClienteId(int id) {
+        return pedidoDAO.filterByClienteId(id);
+    }
+
+    // FILTRAR POR COMERCIAL
+    public List<Pedido> filterByComercialId(int id) {
+        return pedidoDAO.filterByComercialId(id);
     }
 }
-

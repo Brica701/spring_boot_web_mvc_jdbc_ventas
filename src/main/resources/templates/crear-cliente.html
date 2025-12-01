@@ -42,6 +42,12 @@
             <div class="text-danger" th:if="${#fields.hasErrors('categoria')}" th:errors="*{categoria}"></div>
         </div>
 
+        <div class="mb-3">
+            <label for="email" class="form-label">Email</label>
+            <input type="email" th:field="*{email}" class="form-control" id="email" placeholder="Email">
+            <div class="text-danger" th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></div>
+        </div>
+
         <button type="submit" class="btn btn-primary">Crear</button>
         <a th:href="@{/clientes}" class="btn btn-secondary ms-2">Cancelar</a>
     </form>
