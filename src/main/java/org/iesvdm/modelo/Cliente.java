@@ -10,8 +10,7 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnNotWebAppli
 //Para generar un constructor con lombok con todos los args
 @AllArgsConstructor
 @NoArgsConstructor
-@Getter
-@Setter
+@Builder
 public class Cliente {
 	
 	private long id;
