@@ -2,9 +2,9 @@ package org.iesvdm.service;
 
 import java.util.List;
 
-import org.iesvdm.dao.ClienteDAO;
-import org.iesvdm.dao.PedidoDAO;
 import org.iesvdm.modelo.Cliente;
+import org.iesvdm.repository.ClienteRepository;
+import org.iesvdm.repository.PedidoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -13,39 +13,39 @@ public class ClienteService {
 
 
 	@Autowired
-	private ClienteDAO clienteDAO;
+	private ClienteRepository clienteRepository;
     @Autowired
-    protected PedidoDAO pedidoDAO;
+    private PedidoRepository pedidoRepository;
 	
 	//Se utiliza inyección automática por constructor del framework Spring.
 	//Por tanto, se puede omitir la anotación Autowired
 	//@Autowired
-	public ClienteService(ClienteDAO clienteDAO) {
-        this.clienteDAO = clienteDAO;
+	public ClienteService(ClienteRepository clienteDAO) {
+        this.clienteRepository = clienteRepository;
 	}
 
     // Devuelve todos los clientes
     public List<Cliente> listAll() {
-        return clienteDAO.getAll();
+        return clienteRepository.getAll();
     }
 
     // Guarda o actualiza un cliente
     public void update(Cliente cliente) {
-        clienteDAO.update(cliente);
+        clienteRepository.update(cliente);
     }
 	
 	public void create(Cliente cliente) {
-        clienteDAO.create(cliente);
+        clienteRepository.create(cliente);
     }
 
     public void delete(long id) {
-    	clienteDAO.delete(id);
+        clienteRepository.delete(id);
     }
 
     // Nuevo método: verifica si se puede borrar el cliente
     public boolean canDelete(long clienteId) {
         // Si el cliente NO tiene pedidos, se puede borrar
-        return pedidoDAO.getAll().stream()
+        return pedidoRepository.getAll().stream()
                 .noneMatch(p -> p.getIdCliente() == clienteId);
     }
 

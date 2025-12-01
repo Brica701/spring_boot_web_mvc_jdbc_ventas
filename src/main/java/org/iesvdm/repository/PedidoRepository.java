@@ -1,4 +1,4 @@
-package org.iesvdm.dao;
+package org.iesvdm.repository;
 
 import java.sql.PreparedStatement;
 import java.sql.Date;
@@ -16,7 +16,7 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @Repository
-public class PedidoDAOImpl implements PedidoDAO {
+public class PedidoRepository implements PedidoDAO {
 
     @Autowired
     private JdbcTemplate jdbcTemplate;

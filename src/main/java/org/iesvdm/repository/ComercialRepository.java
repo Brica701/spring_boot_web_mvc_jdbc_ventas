@@ -1,11 +1,9 @@
-package org.iesvdm.dao;
+package org.iesvdm.repository;
 
 import java.util.List;
 import java.util.Optional;
 
-import org.iesvdm.modelo.Cliente;
 import org.iesvdm.modelo.Comercial;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
@@ -17,13 +15,12 @@ import lombok.extern.slf4j.Slf4j;
 @Repository
 //Utilizo lombok para generar el constructor
 @AllArgsConstructor
-public class ComercialDAOImpl implements ComercialDAO {
+public class ComercialRepository {
 
 	//JdbcTemplate se inyecta por el constructor de la clase automáticamente
 	//
 	private JdbcTemplate jdbcTemplate;
 	
-	@Override
     public void create(Comercial comercial) {
         int rows = jdbcTemplate.update(
                 "INSERT INTO comercial (nombre, apellido1, apellido2, comision) VALUES (?, ?, ?, ?)",
@@ -36,7 +33,6 @@ public class ComercialDAOImpl implements ComercialDAO {
         log.info("Insertados {} registros.", rows);
     }
 
-	@Override
 	public List<Comercial> getAll() {
 		
 		List<Comercial> listComercial = jdbcTemplate.query(
@@ -54,7 +50,6 @@ public class ComercialDAOImpl implements ComercialDAO {
         return listComercial;
 	}
 
-    @Override
     public Optional<Comercial> find(int id) {
         Comercial comercial = jdbcTemplate.queryForObject(
                 "SELECT * FROM comercial WHERE id = ?",
@@ -72,7 +67,6 @@ public class ComercialDAOImpl implements ComercialDAO {
         return Optional.ofNullable(comercial);
     }
 
-    @Override
     public void update(Comercial comercial) {
         int rows = jdbcTemplate.update(
                 "UPDATE comercial SET nombre = ?, apellido1 = ?, apellido2 = ?, comision = ? WHERE id = ?",
@@ -86,7 +80,6 @@ public class ComercialDAOImpl implements ComercialDAO {
         log.info("Actualizados {} registros.", rows);
     }
 
-    @Override
     public void delete(long id) {
         int rows = jdbcTemplate.update("DELETE FROM comercial WHERE id = ?", id);
         log.info("Eliminados {} registros.", rows);
